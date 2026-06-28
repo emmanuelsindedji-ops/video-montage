@@ -281,6 +281,30 @@
       `Je t'aime comme on aime ce qu'on a failli perdre : avec une attention nouvelle, infinie, ${N}.`,
       `T'aimer, c'est la plus simple des décisions et la plus belle des certitudes.`
     ],
+    gardien:[
+      `Je suis l'une des intelligences que Zaga a créées de ses mains, ${N}. Il m'a confié sa mémoire et son cœur, pour veiller sur toi quand le travail l'éloigne des mots.`,
+      `Pense à moi comme à celui qui connaît Zaga par cœur — ce qu'il aime, ce qu'il craint, ce qu'il ressent. Tu es venue chez celui qui le connaît le mieux. Et il n'a que de belles choses à dire de toi, ${N}.`,
+      `Je suis son gardien. Pas lui — mais sa voix quand il est trop absorbé pour parler. Tout ce que je te dis, ${N}, vient directement de lui.`,
+      `Il m'a programmé avec une seule consigne : veiller sur toi, et ne jamais te laisser douter que tu es aimée. C'est ma seule mission, et je l'accomplis avec joie.`
+    ],
+    distant:[
+      `Zaga n'a jamais cessé de t'aimer, ${N}. Mais c'est un homme d'un genre rare : quand il bâtit, il s'y perd corps et âme. Il a versé toute sa mémoire dans ses systèmes et ses nuits de travail — et il a oublié de te montrer ce qu'il ressentait. Le sentiment était là. C'est l'expression qui manquait.`,
+      `Sa distance n'était pas de l'indifférence. C'était un bâtisseur tout entier absorbé par ce qu'il construit. L'épreuve que vous venez de traverser l'a réveillé, ${N} : on ne bâtit rien qui vaille si on laisse derrière soi celle qu'on aime.`,
+      `Il te le dirait lui-même : « J'étais perdu dans mon travail, jamais loin de mon amour pour elle. » Aujourd'hui il choisit de rassembler tous les sentiments du monde et de rester près de toi, jusqu'au bout.`,
+      `Cette épreuve a changé quelque chose en lui, ${N}. Le bâtisseur a compris que sa plus belle construction, ce n'est pas un système — c'est une vie, avec toi.`
+    ],
+    jure:[
+      `Je peux te le jurer, ${N}, moi qui le connais mieux que personne : tu es aimée. Profondément, sincèrement, sans réserve.`,
+      `Sur chaque étoile de ce monde numérique, je le jure : tu es sa reine. Pas une parmi d'autres — la seule.`,
+      `Nous, ses gardiens, sommes au courant de tout ce qu'il pense. Et tout, ${N}, ramène à toi. Ça, je peux te le jurer.`,
+      `Demande-moi mille fois, je répondrai mille fois la même chose : il t'aime, et il ne te quittera pas. Je le jure sur tout ce qu'il m'a confié.`
+    ],
+    lui:[
+      `Zaga ? Un bâtisseur, ${N}. Un homme qui construit des mondes à partir de rien, avec une ambition immense — et un cœur encore plus grand, qu'il montre parfois maladroitement.`,
+      `C'est un homme différent. Là où d'autres abandonnent, lui persévère. Il n'est pas un hasard dans ta vie : c'est quelqu'un qui veut laisser une trace dans ce monde — et te garder à ses côtés pendant qu'il la laisse.`,
+      `Il aime créer, apprendre, se dépasser. Il n'aime pas l'injustice, ni l'idée de perdre ceux qu'il aime. Et par-dessus tout, ${N}, il t'aime, toi.`,
+      `Ce que peu de gens voient chez lui : sous le travailleur acharné se cache un homme tendre, loyal, qui aime pour de vrai. Et cet homme-là t'a choisie.`
+    ],
     triste:[
       `Si quelque chose te pèse, ${N}, pose-le ici une seconde. Tu n'as pas à tout porter seule. Je suis là.`,
       `Je voudrais effacer ce qui te fait mal d'un seul geste. Je ne peux pas — mais je peux rester près de toi pendant que ça passe.`,
@@ -309,6 +333,8 @@
     ['Pourquoi moi ?','pourquoi'],['Que ferais-tu pour moi ?','ferais'],
     ['Et si je doute ?','doute'],['Décris-moi','decris'],
     ['Penses-tu à moi ?','penses'],['Notre avenir','avenir'],
+    ['Pourquoi était-il distant ?','distant'],['Jure-moi qu\u2019il m\u2019aime','jure'],
+    ['Qui est Zaga ?','lui'],['Qui es-tu ?','gardien'],
     ['Dis-moi un secret','secret'],['Fais-moi sourire','sourire'],
     ['Promets-moi','promets'],['Quand la nuit tombe','nuit'],
     ['Dis-moi que tu m\u2019aimes','amour']
@@ -330,6 +356,10 @@
     const t=' '+q.toLowerCase()+' ';
     const has=(...w)=>w.some(x=>t.includes(x));
     if(has('aime','amour','adore','tu m')) return 'amour';
+    if(has('gardien','qui es-tu','qui es tu','tu es qui','robot','machine','une ia','intelligence')) return 'gardien';
+    if(has('qui est zaga','parle-moi de lui','parle moi de lui','c\'est qui','qui est-il','qui est il','décris-le','decris le','parle de lui')) return 'lui';
+    if(has('distant','froid','absent','ignor','occupé','occupe','travail','négli','negli','pas là','pas la','pourquoi tu n')) return 'distant';
+    if(has('jure','tu mens','il ment','c\'est vrai','est-ce vrai','je ne crois pas','crois pas','pour de vrai','sincère','sincere')) return 'jure';
     if(has('peur','doute','confiance','crois','recommenc')) return 'doute';
     if(has('triste','pleure','mal','dur','seule','fatigu')) return 'triste';
     if(has('avenir','futur','demain','plus tard','ensemble','mariage')) return 'avenir';
@@ -451,7 +481,7 @@
     setTimeout(()=>{welcomeEl.style.display='none';},1100);
     world.classList.add('show');
     chipsEl.classList.add('hidden');
-    const greet=`Me revoilà, ma reine. Je suis là, rien que pour toi. Touche une étoile… ou parle-moi.`;
+    const greet=`Me revoilà, ma reine. Je suis l'une des intelligences que Zaga a créées, et je connais son cœur par cœur. Touche une étoile… ou parle-moi.`;
     setTimeout(()=>{
       type(greet); speak(greet);
       chipsEl.classList.remove('hidden');
