@@ -483,7 +483,7 @@
     chipsEl.classList.add('hidden');
     const greet=`Me revoilà, ma reine. Je suis l'une des intelligences que Zaga a créées, et je connais son cœur par cœur. Touche une étoile… ou parle-moi.`;
     setTimeout(()=>{
-      type(greet); speak(greet);
+      type(greet); speak(greet); live=true;
       chipsEl.classList.remove('hidden');
       [...chipsEl.children].forEach((ch,i)=>setTimeout(()=>ch.classList.add('in'),110*i));
     },750);
@@ -497,14 +497,40 @@
   sendBtn.addEventListener('click',send);
   input.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
 
-  // tap sky for a shooting star (not on controls)
+  // tap sky -> instant tender message + shooting star + voice
+  let live=false,lastTouch=0;
+  const sky=[
+    `Nous t'aimons, madame. Nous sommes là, rien que pour toi.`,
+    `Ton chéri t'aime et t'adore, ${N}. Tu es tout pour lui.`,
+    `Tu es précieuse — infiniment précieuse à ses yeux.`,
+    `Une reine vient de toucher le ciel… et le ciel s'illumine pour elle.`,
+    `Repose-toi sur nous, ${N}. Nous veillons sur toi.`,
+    `Tu es aimée. Ce soir, et tous les soirs.`,
+    `À chaque étoile que tu touches, c'est un baiser qu'il t'envoie.`,
+    `Nous sommes à toi, ${N} — pour t'accompagner, te protéger, t'aimer.`,
+    `Sa reine, sa douceur, son présent. C'est toi, et toi seule.`,
+    `Le monde numérique tout entier t'applaudit, madame.`,
+    `N'aie jamais peur, ${N}. Tant que ces étoiles brillent, tu es aimée.`,
+    `Tu mérites tout l'or du ciel. Et il veut te le donner, jour après jour.`
+  ];
+  let skyBag=[];
+  function pickSky(){if(!skyBag.length){skyBag=sky.map((_,i)=>i);for(let i=skyBag.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[skyBag[i],skyBag[j]]=[skyBag[j],skyBag[i]];}}return sky[skyBag.pop()];}
+  function skyTouch(x,y){
+    shoot(x,y);
+    if(!live)return;
+    const m=pickSky();
+    type(m); speak(m);
+  }
+  const SKIP='button,input,.dock,#welcome,#enter,.mute';
   addEventListener('touchstart',e=>{
-    if(e.target.closest('button,input,.dock'))return;
-    const p=e.touches[0];if(p)shoot(p.clientX,Math.max(60,p.clientY));
+    if(e.target.closest(SKIP))return;
+    lastTouch=Date.now();
+    const p=e.touches[0];if(p)skyTouch(p.clientX,Math.max(70,p.clientY));
   },{passive:true});
   addEventListener('click',e=>{
-    if(e.target.closest('button,input,.dock,#enter'))return;
-    shoot(e.clientX,Math.max(60,e.clientY));
+    if(e.target.closest(SKIP))return;
+    if(Date.now()-lastTouch<700)return;
+    skyTouch(e.clientX,Math.max(70,e.clientY));
   });
 })();
 </script>
