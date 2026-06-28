@@ -1,864 +1,482 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>Zaga Video Maker — Zaga Spirit</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Le Gardien · Pour Sylvana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--gold:#FFD700;--fire:#FF4500;--purple:#8B00FF;--dark:#050008;--card:#ffffff09;--border:#ffffff15;--text:#F5F0FF;--sub:#9980C8;--green:#00CC66}
-body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,#2D005088,transparent 55%),radial-gradient(ellipse at 80% 100%,#1A003088,transparent 55%);z-index:0;pointer-events:none}
-#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 0 60px}
-.hdr{text-align:center;padding:28px 18px 0}
-.hdr-badge{display:inline-block;background:linear-gradient(135deg,var(--purple),var(--gold));border-radius:30px;padding:6px 20px;font-size:11px;font-weight:800;color:#000;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;box-shadow:0 0 24px #8B00FF66}
-.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:3px;background:linear-gradient(135deg,#fff,var(--gold),var(--fire));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.hdr-sub{font-size:12px;color:var(--sub);margin-top:6px;letter-spacing:1px}
-.tabs{display:flex;margin:20px 16px 0;background:#ffffff08;border-radius:14px;padding:4px}
-.tab{flex:1;padding:10px 4px;text-align:center;border-radius:11px;cursor:pointer;font-size:11px;font-weight:700;color:#555;transition:all .25s;border:none;background:transparent;font-family:inherit}
-.tab.active{background:linear-gradient(135deg,var(--purple),var(--fire));color:#fff;box-shadow:0 4px 14px #8B00FF55}
-.section{padding:16px;display:none}
-.section.active{display:block}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px}
-.card-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
-label.lbl{font-size:10px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
-input,select,textarea{width:100%;background:#ffffff08;border:1px solid var(--border);border-radius:12px;padding:11px 13px;color:var(--text);font-size:13px;margin-bottom:10px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:#8B00FF77}
-select{background:#0A000F}
-select option{background:#0A000F}
-textarea{resize:vertical;line-height:1.6}
-.style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.style-btn{background:#ffffff08;border:2px solid transparent;border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s}
-.style-btn.active{border-color:var(--gold);background:#FFD70015}
-.style-btn .s-icon{font-size:24px;margin-bottom:4px}
-.style-btn .s-name{font-size:10px;font-weight:800;color:#E0D0FF}
-.photo-zone{border:2px dashed #8B00FF44;border-radius:14px;padding:20px;text-align:center;background:#8B00FF06;margin-bottom:12px;transition:all .3s}
-.photo-zone.has-photos{border-color:var(--gold);border-style:solid;background:#FFD70008}
-.photo-list{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-.photo-item{position:relative;width:68px;height:68px;border-radius:10px;overflow:hidden;border:2px solid var(--gold)}
-.photo-item img{width:100%;height:100%;object-fit:cover}
-.photo-item .del{position:absolute;top:2px;right:2px;background:#ff000099;border:none;border-radius:50%;width:18px;height:18px;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:inherit}
-#photo-input{display:none}
-.overlay-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.overlay-item{background:#ffffff08;border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px}
-.overlay-item .ov-time{font-size:11px;color:var(--gold);font-weight:800;min-width:36px}
-.overlay-item .ov-text{flex:1;font-size:12px;color:#E0D0FF;line-height:1.4}
-.overlay-item .ov-del{background:none;border:none;color:#FF4500;font-size:16px;cursor:pointer;padding:0 4px}
-.add-overlay-row{display:flex;gap:8px;margin-bottom:10px}
-.add-overlay-row input{margin-bottom:0;font-size:12px}
-.btn-fire{width:100%;background:linear-gradient(135deg,#8B00FF,#FF4500,#FFD700);border:none;border-radius:14px;padding:16px;color:#fff;font-weight:800;font-size:15px;cursor:pointer;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;box-shadow:0 6px 28px #8B00FF55;transition:all .3s;background-size:200%;animation:gradShift 3s ease infinite}
-@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.btn-fire:disabled{opacity:.5;animation:none;cursor:not-allowed}
-.btn-secondary{width:100%;background:#FFD70012;border:1px solid #FFD70030;border-radius:11px;padding:11px;color:var(--gold);font-weight:700;cursor:pointer;font-size:13px;margin-top:8px;font-family:inherit}
-.btn-add{background:linear-gradient(135deg,var(--purple),var(--fire));border:none;border-radius:10px;padding:10px 16px;color:#fff;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
-.media-btn{display:inline-block;padding:10px 20px;background:linear-gradient(135deg,var(--purple),var(--fire));border:none;border-radius:10px;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;letter-spacing:1px;margin-top:8px}
-.preview-wrap{position:relative;background:#000;border-radius:16px;overflow:hidden;margin-bottom:14px;aspect-ratio:9/16;max-height:500px}
-#preview-canvas{width:100%;height:100%;display:block}
-.preview-controls{display:flex;gap:8px;margin-bottom:14px}
-.ctrl-btn{flex:1;background:#ffffff10;border:1px solid var(--border);border-radius:10px;padding:10px;color:#E0D0FF;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;text-align:center}
-.progress-bar{height:6px;background:#ffffff10;border-radius:3px;overflow:hidden;margin-bottom:6px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;transition:width .1s;width:0%}
-.progress-txt{font-size:11px;color:var(--sub);text-align:center;margin-bottom:14px}
-.tts-section{background:#00CC6608;border:1px solid #00CC6620;border-radius:14px;padding:14px;margin-bottom:12px}
-.tts-section label.lbl{color:#00CC66}
-.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.voice-btn{background:#ffffff08;border:2px solid transparent;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:inherit}
-.voice-btn.active{border-color:var(--green);background:#00CC6615}
-.voice-btn .v-icon{font-size:20px;margin-bottom:4px}
-.voice-btn .v-name{font-size:11px;font-weight:800;color:#E0D0FF}
-.voice-btn .v-desc{font-size:9px;color:#666}
-.tts-test-btn{width:100%;background:linear-gradient(135deg,#00CC66,#008844);border:none;border-radius:11px;padding:12px;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;margin-bottom:8px}
-.audio-rec-btn{width:100%;background:linear-gradient(135deg,#00CC66,#008844);border:none;border-radius:12px;padding:14px;color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
-.audio-rec-btn.recording{background:linear-gradient(135deg,#CC0000,#880000);animation:recPulse 1s ease-in-out infinite}
-@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 #CC000055}50%{box-shadow:0 0 0 12px #CC000000}}
-.audio-status{font-size:11px;color:var(--green);text-align:center;margin-top:8px;min-height:16px}
-.audio-player{width:100%;margin-top:10px;border-radius:8px;display:none}
-.dur-row{display:flex;gap:6px;margin-bottom:10px}
-.dur-btn{flex:1;background:#ffffff08;border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;transition:all .2s;font-family:inherit}
-.dur-btn.active{background:#FFD70018;border-color:var(--gold)}
-.dur-btn .dt{font-size:13px;font-weight:800;color:#E0D0FF}
-.dur-btn.active .dt{color:var(--gold)}
-.dur-btn .dl{font-size:9px;color:#666;margin-top:2px}
-.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
-.filter-btn{flex-shrink:0;background:#ffffff08;border:2px solid transparent;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:11px;font-weight:700;color:#888;transition:all .2s;font-family:inherit;white-space:nowrap}
-.filter-btn.active{background:#8B00FF20;border-color:#8B00FF66;color:#C084FC}
-.chat-wrap{background:#0A000F;border:1px solid #8B00FF33;border-radius:16px;overflow:hidden}
-.chat-hdr{background:linear-gradient(135deg,rgba(139,0,255,.2),rgba(255,69,0,.1));padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #8B00FF22}
-.chat-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--fire));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.chat-name{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px}
-.chat-status{font-size:9px;color:var(--green);letter-spacing:1px}
-.chat-msgs{padding:12px;height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
-.cmsg{max-width:88%;padding:9px 12px;border-radius:11px;font-size:12px;line-height:1.6}
-.cmsg.ai{background:#12001A;border:1px solid #8B00FF22;color:#E8D8FF;align-self:flex-start;border-bottom-left-radius:3px}
-.cmsg.user{background:linear-gradient(135deg,var(--purple),var(--fire));color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
-.cmsg.error{background:#1A0000;border:1px solid #FF000033;color:#FF8888;align-self:flex-start}
-.cmsg-lbl{font-size:9px;letter-spacing:2px;color:#8B00FF;margin-bottom:3px;font-weight:800}
-.typing span{width:5px;height:5px;background:#8B00FF;border-radius:50%;animation:bounce 1.2s infinite;display:inline-block;margin:0 2px}
-.typing span:nth-child(2){animation-delay:.2s}
-.typing span:nth-child(3){animation-delay:.4s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-.chat-inp-row{padding:8px 12px;border-top:1px solid #8B00FF15;display:flex;gap:8px;align-items:center}
-.chat-inp{flex:1;background:#ffffff08;border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;margin:0}
-.chat-send{width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--fire));border:none;border-radius:9px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.notif{position:fixed;top:14px;left:14px;right:14px;background:#0A000F;border:1px solid #8B00FF55;border-radius:14px;padding:12px 16px;z-index:9999;font-size:13px;font-weight:700;box-shadow:0 8px 32px #00000099;max-width:520px;margin:0 auto;transform:translateY(-80px);opacity:0;transition:transform .3s ease,opacity .3s ease;pointer-events:none}
-.notif.show{transform:translateY(0);opacity:1}
-.export-section{background:#FFD70010;border:1px solid #FFD70030;border-radius:14px;padding:14px;margin-bottom:14px}
-.export-section p{font-size:11px;color:#FFD700;margin-bottom:10px;line-height:1.6}
+  :root{
+    --sky-top:#05061a; --sky-mid:#0a0d28; --sky-horizon:#171336;
+    --star:#f5f2ea; --star-cool:#cdd6ff; --gold:#ecca7d; --rose:#e7a8a6;
+    --ink:#e9e6dd; --muted:#9aa0c4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{
+    font-family:'Cormorant Garamond',serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    background:radial-gradient(120% 90% at 50% 6%, var(--sky-mid), var(--sky-top) 55%, #02030d 100%);
+  }
+  #sky{position:fixed;inset:0;z-index:0;display:block;touch-action:manipulation}
+  .horizon{position:fixed;left:0;right:0;bottom:0;height:40%;z-index:0;
+    background:radial-gradient(80% 120% at 50% 130%, rgba(231,168,166,.10), transparent 60%),
+               linear-gradient(to top, var(--sky-horizon), transparent)}
+
+  /* ENTRANCE */
+  #enter{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:9vmin;
+    transition:opacity 1.3s ease, visibility 1.3s}
+  #enter.gone{opacity:0;visibility:hidden}
+  .pre{font-family:'Cormorant Garamond';letter-spacing:.4em;text-transform:uppercase;
+    color:var(--gold);opacity:.8;font-size:clamp(.78rem,3.4vw,1rem);margin-bottom:1.6rem}
+  .enterline{font-family:'Playfair Display',serif;font-weight:500;line-height:1.2;
+    font-size:clamp(1.9rem,7.6vw,3rem);max-width:18rem}
+  .heartbtn{margin-top:3rem;width:clamp(92px,26vw,120px);height:clamp(92px,26vw,120px);
+    border-radius:50%;border:1px solid rgba(236,202,125,.5);background:rgba(236,202,125,.06);
+    color:var(--gold);font-family:'Cormorant Garamond';font-size:clamp(.95rem,4vw,1.1rem);
+    letter-spacing:.16em;text-transform:uppercase;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    animation:beat 2.4s ease-in-out infinite;transition:background .4s,transform .25s}
+  .heartbtn:hover,.heartbtn:focus-visible{background:rgba(236,202,125,.16);outline:none;transform:scale(1.04)}
+  @keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(236,202,125,.30)}50%{box-shadow:0 0 0 22px rgba(236,202,125,0)}}
+
+  /* WORLD */
+  #world{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;transition:opacity 1.3s ease .2s, visibility 1.3s}
+  #world.show{opacity:1;visibility:visible}
+  .top{padding:max(5vh,1.4rem) 7vw 1rem;text-align:center;flex:0 0 auto}
+  .orb{width:64px;height:64px;margin:0 auto .9rem;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%, #fff, var(--gold) 42%, #c9963f 72%, #6e4f1c);
+    box-shadow:0 0 26px 6px rgba(236,202,125,.45);transition:transform .4s}
+  .orb.think{animation:think 1.1s ease-in-out infinite}
+  @keyframes think{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  .guardian-name{font-family:'Cormorant Garamond';font-style:italic;color:var(--gold);
+    letter-spacing:.04em;font-size:clamp(1rem,4.4vw,1.2rem)}
+  .guardian-sub{color:var(--muted);font-size:clamp(.82rem,3.4vw,.95rem);margin-top:.25rem;opacity:.85}
+
+  .speech{flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+    padding:1rem 8vw;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .speech.scroll{align-items:flex-start;padding-top:7vh;padding-bottom:4vh}
+  .reply{font-family:'Cormorant Garamond';font-weight:500;text-align:center;
+    font-size:clamp(1.35rem,6.2vw,1.95rem);line-height:1.5;max-width:30rem;color:var(--star)}
+  .reply .hl{color:var(--gold);font-style:italic}
+  .caret{display:inline-block;width:.6ch;color:var(--gold);animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  .dock{flex:0 0 auto;padding:.6rem 4vw max(4vh,1.2rem);position:relative;z-index:2;
+    background:linear-gradient(to top, rgba(5,6,26,.92), rgba(5,6,26,.55) 55%, transparent)}
+  .chips{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;max-width:34rem;margin:0 auto 1rem}
+  .chip{background:rgba(205,214,255,.05);border:1px solid rgba(236,202,125,.28);
+    color:var(--ink);border-radius:999px;padding:.5em 1.05em;font-family:'Cormorant Garamond';
+    font-size:clamp(.95rem,3.9vw,1.1rem);cursor:pointer;transition:all .3s;letter-spacing:.01em}
+  .chip:hover,.chip:focus-visible{background:rgba(236,202,125,.14);border-color:var(--gold);
+    color:#fff;outline:none;transform:translateY(-1px)}
+  .ask{display:flex;gap:.5rem;max-width:30rem;margin:0 auto;align-items:center}
+  .ask input{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(205,214,255,.18);
+    border-radius:999px;padding:.7em 1.1em;color:var(--ink);font-family:'Cormorant Garamond';
+    font-size:clamp(1rem,4vw,1.15rem);outline:none}
+  .ask input::placeholder{color:var(--muted);opacity:.7}
+  .ask input:focus{border-color:rgba(236,202,125,.5)}
+  .ask button{background:var(--gold);color:#1a1330;border:none;border-radius:50%;
+    width:46px;height:46px;font-size:1.2rem;cursor:pointer;flex:0 0 auto;transition:transform .2s}
+  .ask button:hover{transform:scale(1.08)}
+  .chips{transition:opacity .8s ease}
+  .chips.hidden{opacity:0;pointer-events:none}
+  .chip{opacity:0;transform:translateY(8px)}
+  .chip.in{opacity:1;transform:translateY(0)}
+  #continue{display:block;margin:1.6rem auto 0;background:transparent;
+    border:1px solid rgba(236,202,125,.55);color:var(--gold);border-radius:999px;
+    padding:.62em 1.9em;font-family:'Cormorant Garamond';letter-spacing:.16em;
+    text-transform:uppercase;font-size:clamp(.9rem,3.8vw,1.05rem);cursor:pointer;transition:background .4s}
+  #continue:hover,#continue:focus-visible{background:rgba(236,202,125,.14);outline:none}
+  .reply .ask-back{display:block;margin-top:1rem;font-style:italic;color:var(--rose);
+    font-size:.82em;opacity:.95}
+
+  /* WELCOME overlay */
+  #welcome{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:9vmin 8vw;
+    opacity:0;visibility:hidden;transition:opacity 1.1s ease, visibility 1.1s}
+  #welcome.show{opacity:1;visibility:visible}
+  .wlines{max-width:30rem;display:flex;flex-direction:column;gap:1.1rem}
+  .wline{opacity:0;transform:translateY(48px);
+    transition:opacity 1.7s ease, transform 2s cubic-bezier(.2,.7,.2,1);
+    font-family:'Cormorant Garamond';font-weight:500;color:var(--ink);
+    font-size:clamp(1.18rem,5.2vw,1.6rem);line-height:1.5}
+  .wline.in{opacity:1;transform:translateY(0)}
+  .wline .hl{color:var(--gold);font-style:italic}
+  .wline.crown{font-family:'Playfair Display',serif;color:var(--gold);font-weight:600;
+    font-size:clamp(1.5rem,7vw,2.05rem);margin-bottom:.2rem}
+  .wprompt{margin-top:2.4rem;opacity:0;transition:opacity 1.4s ease;cursor:pointer;
+    color:var(--gold);letter-spacing:.16em;text-transform:uppercase;
+    font-size:clamp(.9rem,3.8vw,1.05rem)}
+  .wprompt.in{opacity:1}
+  .pulse{display:inline-block;animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .mute{position:fixed;top:max(2.6vh,1rem);right:max(4vw,1rem);z-index:8;
+    width:42px;height:42px;border-radius:50%;border:1px solid rgba(236,202,125,.4);
+    background:rgba(5,6,26,.5);color:var(--gold);font-size:1.02rem;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);
+    transition:background .3s}
+  .mute:hover{background:rgba(236,202,125,.16)}
+
+  @media (prefers-reduced-motion: reduce){
+    .heartbtn{animation:none}.orb.think{animation:none}.caret{animation:none}
+    .pulse{animation:none}
+    .wline{transition:opacity .5s ease}
+  }
 </style>
 </head>
 <body>
-<div id="app">
-  <header class="hdr">
-    <div class="hdr-badge">ZAGA SPIRIT</div>
-    <h1 class="hdr-title">VIDEO MAKER PRO</h1>
-    <p class="hdr-sub">Crée ta vidéo professionnelle — 100% Zaga Spirit 🔥</p>
-  </header>
+<canvas id="sky"></canvas>
+<div class="horizon"></div>
 
-  <div class="tabs">
-    <button class="tab active" data-tab="create">🎬 Créer</button>
-    <button class="tab" data-tab="preview">▶️ Aperçu</button>
-    <button class="tab" data-tab="ia">🤖 IA</button>
+<!-- ENTRANCE -->
+<div id="enter">
+  <p class="pre">Pour toi, et toi seule</p>
+  <p class="enterline">Appuie pour entrer,<br>ma demoiselle —<br>l'arrêt de mon cœur.</p>
+  <button class="heartbtn" id="enterBtn">Entrer</button>
+</div>
+
+<!-- WELCOME (rises from bottom to top) -->
+<div id="welcome">
+  <div class="wlines" id="wlines"></div>
+  <div class="wprompt" id="wprompt"><span class="pulse">✦ Touche pour entrer dans ton monde</span></div>
+</div>
+
+<button class="mute" id="mute" aria-label="Couper le son" title="Son">🔊</button>
+
+<!-- WORLD -->
+<div id="world">
+  <div class="top">
+    <div class="orb" id="orb"></div>
+    <div class="guardian-name">Le Gardien</div>
+    <div class="guardian-sub">codé par Zaga, pour veiller sur son amour, Sylvana</div>
   </div>
-
-  <!-- CRÉER -->
-  <div class="section active" id="section-create">
-
-    <div class="card">
-      <div class="card-title">🎨 STYLE VISUEL</div>
-      <div class="style-grid">
-        <div class="style-btn active" data-style="cyberpunk"><div class="s-icon">🌆</div><div class="s-name">CYBERPUNK</div></div>
-        <div class="style-btn" data-style="luxe"><div class="s-icon">💎</div><div class="s-name">LUXE</div></div>
-        <div class="style-btn" data-style="fire"><div class="s-icon">🔥</div><div class="s-name">FIRE</div></div>
-        <div class="style-btn" data-style="ocean"><div class="s-icon">🌊</div><div class="s-name">OCEAN</div></div>
-        <div class="style-btn" data-style="gold"><div class="s-icon">👑</div><div class="s-name">GOLD</div></div>
-        <div class="style-btn" data-style="minimal"><div class="s-icon">⬜</div><div class="s-name">MINIMAL</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📸 TES PHOTOS</div>
-      <input type="file" id="photo-input" multiple accept="image/*"/>
-      <div class="photo-zone" id="photo-zone">
-        <div style="font-size:36px;margin-bottom:8px">🤳</div>
-        <div style="font-size:13px;font-weight:700;color:#ccc;margin-bottom:4px">Ajoute tes photos</div>
-        <div style="font-size:11px;color:#555">3 à 6 photos recommandées</div>
-        <button class="media-btn" id="photo-btn">CHOISIR MES PHOTOS</button>
-        <div class="photo-list" id="photo-list"></div>
-        <div style="font-size:11px;color:var(--gold);margin-top:6px;font-weight:700" id="photo-count">0 photo(s)</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">✨ FILTRE PHOTO</div>
-      <div class="filter-row">
-        <div class="filter-btn active" data-filter="none">Original</div>
-        <div class="filter-btn" data-filter="vivid">Vivid</div>
-        <div class="filter-btn" data-filter="noir">Noir & Blanc</div>
-        <div class="filter-btn" data-filter="warm">Chaud</div>
-        <div class="filter-btn" data-filter="cool">Froid</div>
-        <div class="filter-btn" data-filter="cinema">Cinéma</div>
-        <div class="filter-btn" data-filter="luxury">Luxe</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📝 TEXTES À L'ÉCRAN</div>
-      <div class="overlay-list" id="overlay-list"></div>
-      <div class="add-overlay-row">
-        <input type="number" id="ov-time" placeholder="Sec." min="0" style="width:70px;flex-shrink:0"/>
-        <input type="text" id="ov-text" placeholder="Texte à afficher..."/>
-        <button class="btn-add" id="add-ov-btn">+</button>
-      </div>
-      <button class="btn-secondary" id="auto-texts-btn">🤖 GÉNÉRER TEXTES AUTO IA</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🎙️ VOIX</div>
-
-      <!-- TTS AUTO -->
-      <div class="tts-section">
-        <label class="lbl">🤖 VOIX IA AUTOMATIQUE</label>
-        <div class="voice-grid">
-          <div class="voice-btn active" data-voice="homme-pro"><div class="v-icon">👔</div><div class="v-name">HOMME PRO</div><div class="v-desc">Grave & posé</div></div>
-          <div class="voice-btn" data-voice="homme-fort"><div class="v-icon">💪</div><div class="v-name">HOMME FORT</div><div class="v-desc">Puissant</div></div>
-          <div class="voice-btn" data-voice="femme-pro"><div class="v-icon">👩‍💼</div><div class="v-name">FEMME PRO</div><div class="v-desc">Claire & pro</div></div>
-          <div class="voice-btn" data-voice="neutre"><div class="v-icon">🎙️</div><div class="v-name">NEUTRE</div><div class="v-desc">Standard</div></div>
-        </div>
-        <label class="lbl">TEXTE À LIRE PAR LA VOIX IA</label>
-        <textarea id="tts-text" rows="5" placeholder="Colle ici le discours que la voix IA va lire...">Mesdames et Messieurs, bonjour. Je m'appelle Emmanuel Sindedji. Je suis développeur, expert en intelligence artificielle, et fondateur de Zaga Spirit, ici à Dubai. Aujourd'hui, je veux vous parler d'une réalité que beaucoup ignorent encore. Plus de 85% des entreprises dans le monde cherchent activement des développeurs. La technologie n'est pas réservée aux génies. Elle est pour ceux qui ont le courage de commencer. Ne laisse pas le monde avancer sans toi. Le futur appartient à ceux qui le construisent. Je suis Emmanuel Sindedji — Zaga Spirit.</textarea>
-        <button class="tts-test-btn" id="tts-test-btn">🔊 TESTER LA VOIX IA</button>
-        <button class="btn-secondary" id="tts-use-btn">✅ UTILISER CETTE VOIX DANS LA VIDÉO</button>
-      </div>
-
-      <!-- OU enregistrement réel -->
-      <label class="lbl" style="margin-top:8px">OU ENREGISTRE TA PROPRE VOIX</label>
-      <button class="audio-rec-btn" id="rec-btn">🎙️ ENREGISTRER MA VOIX</button>
-      <div class="audio-status" id="rec-status">Prêt à enregistrer</div>
-      <audio class="audio-player" id="audio-player" controls></audio>
-      <input type="file" id="audio-input" accept="audio/*" style="display:none"/>
-      <button class="btn-secondary" id="audio-upload-btn">📂 IMPORTER UN AUDIO</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">⏱️ DURÉE & TITRE</div>
-      <div class="dur-row">
-        <div class="dur-btn" data-dur="15"><div class="dt">15s</div><div class="dl">Court</div></div>
-        <div class="dur-btn active" data-dur="30"><div class="dt">30s</div><div class="dl">Moyen</div></div>
-        <div class="dur-btn" data-dur="60"><div class="dt">60s</div><div class="dl">Long</div></div>
-        <div class="dur-btn" data-dur="90"><div class="dt">90s</div><div class="dl">Complet</div></div>
-      </div>
-      <label class="lbl">TITRE DE LA VIDÉO</label>
-      <input type="text" id="vid-title" placeholder="Emmanuel Sindedji — Zaga Spirit" value="Emmanuel Sindedji — Zaga Spirit"/>
-      <label class="lbl">SOUS-TITRE</label>
-      <input type="text" id="vid-subtitle" placeholder="Expert Tech & IA — Dubai" value="Expert Tech & IA — Dubai"/>
-    </div>
-
-    <button class="btn-fire" id="preview-btn">▶️ VOIR L'APERÇU</button>
-  </div>
-
-  <!-- APERÇU -->
-  <div class="section" id="section-preview">
-    <div class="preview-wrap">
-      <canvas id="preview-canvas" width="540" height="960"></canvas>
-    </div>
-    <div class="preview-controls">
-      <button class="ctrl-btn" id="play-btn">▶️ PLAY</button>
-      <button class="ctrl-btn" id="pause-btn">⏸️ PAUSE</button>
-      <button class="ctrl-btn" id="restart-btn">🔄 RESTART</button>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
-    <div class="progress-txt" id="prog-txt">0s / 30s</div>
-
-    <div class="export-section">
-      <p>💡 Pour partager sur WhatsApp, Instagram ou envoyer aux entreprises : appuie sur <strong>PARTAGER</strong> ou fais une <strong>capture vidéo d'écran</strong> pendant la lecture.</p>
-    </div>
-
-    <button class="btn-fire" id="share-btn">📤 PARTAGER LA VIDÉO</button>
-    <button class="btn-secondary" id="screenshot-btn">📸 CAPTURER L'IMAGE ACTUELLE</button>
-  </div>
-
-  <!-- IA CHAT -->
-  <div class="section" id="section-ia">
-    <div class="card">
-      <div class="card-title">🤖 ASSISTANT IA VIDÉO</div>
-      <div style="background:#FFD70010;border:1px solid #FFD70025;border-radius:10px;padding:10px;font-size:12px;color:#FFD700;margin-bottom:0">
-        💡 Demande-moi de rédiger ton script, tes textes, ta légende ou ton pitch pour Dubai.
-      </div>
-    </div>
-    <div class="chat-wrap">
-      <div class="chat-hdr">
-        <div class="chat-avatar">🎬</div>
-        <div>
-          <div class="chat-name">ZAGA VIDEO IA</div>
-          <div class="chat-status" id="ia-status">● Connexion...</div>
-        </div>
-      </div>
-      <div class="chat-msgs" id="chat-msgs">
-        <div class="cmsg ai">
-          <div class="cmsg-lbl">ZAGA IA</div>
-          Bonjour ! Je suis ton assistant vidéo IA. Je peux rédiger ton script, tes textes overlay, ta légende ou ton pitch pour les entreprises de Dubai. 🚀
-        </div>
-      </div>
-      <div class="chat-inp-row">
-        <input class="chat-inp" id="chat-inp" type="text" placeholder="Demande-moi quelque chose..."/>
-        <button class="chat-send" id="chat-send">➤</button>
-      </div>
+  <div class="speech"><div class="reply" id="reply"></div></div>
+  <div class="dock">
+    <div class="chips" id="chips"></div>
+    <div class="ask">
+      <input id="askInput" type="text" placeholder="Demande-moi ce que tu veux, Sylvana…" autocomplete="off" />
+      <button id="askBtn" aria-label="Envoyer">➜</button>
     </div>
   </div>
 </div>
 
-<div class="notif" id="notif"></div>
-
 <script>
-var GROQ_KEY   = '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';
-var GROQ_URL   = 'https://api.groq.com/openai/v1/chat/completions';
-var GROQ_MODEL = 'llama-3.3-70b-versatile';
-var SYSTEM_IA  = "Tu es un expert en création de contenu vidéo professionnel pour Dubai. Tu aides Emmanuel Sindedji (Zaga Spirit) à créer des scripts percutants. Réponds en français.";
+(function(){
+  const NAME = "Sylvana";
 
-var state = {
-  style:'cyberpunk', filter:'none', photos:[], overlays:[],
-  duration:30, title:'Emmanuel Sindedji — Zaga Spirit',
-  subtitle:'Expert Tech & IA — Dubai',
-  audioBlob:null, audioUrl:null, ttsAudio:null,
-  useTTS:false, ttsVoice:'homme-pro',
-  playing:false, currentTime:0, animFrame:null,
-  mediaRecorder:null, recording:false, chunks:[],
-  chatHistory:[], startTime:null
-};
+  /* ---------- starfield ---------- */
+  const cv=document.getElementById('sky'),ctx=cv.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,DPR,stars=[],shots=[];
+  function resize(){DPR=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR;
+    cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';build();}
+  function build(){stars=[];const n=Math.round(innerWidth*innerHeight/4600);
+    for(let i=0;i<n;i++)stars.push({x:Math.random()*W,y:Math.random()*H*.94,
+      r:(Math.random()*1.1+.3)*DPR,b:Math.random()*.5+.2,tw:Math.random()*7,sp:Math.random()*.9+.25,
+      cool:Math.random()<.35,
+      dx:(Math.random()-.5)*.22*DPR,dy:(Math.random()-.5)*.16*DPR});}
+  function shoot(px,py){const a=Math.PI*.22+(Math.random()*.18-.09);
+    shots.push({x:px*DPR,y:py*DPR,vx:Math.cos(a)*12*DPR,vy:Math.sin(a)*12*DPR,life:1,tr:[]});}
+  function loop(){ctx.clearRect(0,0,W,H);
+    for(const s of stars){s.tw+=.02*s.sp;const a=s.b+Math.sin(s.tw)*.28;
+      s.x+=s.dx;s.y+=s.dy;
+      if(s.x<-2)s.x=W; else if(s.x>W+2)s.x=0;
+      if(s.y<-2)s.y=H*.94; else if(s.y>H*.94+2)s.y=0;
+      ctx.globalAlpha=Math.max(.05,a);ctx.fillStyle=s.cool?'#cdd6ff':'#f5f2ea';
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();}
+    ctx.globalAlpha=1;
+    for(let i=shots.length-1;i>=0;i--){const sh=shots[i];sh.tr.push({x:sh.x,y:sh.y});
+      if(sh.tr.length>16)sh.tr.shift();sh.x+=sh.vx;sh.y+=sh.vy;sh.life-=.012;
+      for(let j=0;j<sh.tr.length;j++){const tp=sh.tr[j],a=(j/sh.tr.length)*sh.life;
+        ctx.globalAlpha=a*.85;ctx.fillStyle='#fff';ctx.beginPath();
+        ctx.arc(tp.x,tp.y,1.6*DPR*(j/sh.tr.length),0,7);ctx.fill();}
+      ctx.globalAlpha=Math.max(0,sh.life);ctx.fillStyle='#ecca7d';
+      ctx.beginPath();ctx.arc(sh.x,sh.y,2.2*DPR,0,7);ctx.fill();ctx.globalAlpha=1;
+      if(sh.life<=0||sh.x>W+50||sh.y>H+50)shots.splice(i,1);}
+    requestAnimationFrame(loop);}
+  resize();loop();addEventListener('resize',resize);
 
-var STYLES = {
-  cyberpunk:{ bg:['#050008','#12001A','#1A0028'], accent:'#8B00FF', accent2:'#FF4500', text:'#F5F0FF', glow:'#8B00FF' },
-  luxe:     { bg:['#0A0800','#1A1400','#0A0800'], accent:'#FFD700', accent2:'#C0A030', text:'#FFF8E0', glow:'#FFD700' },
-  fire:     { bg:['#0A0000','#1A0500','#0A0000'], accent:'#FF4500', accent2:'#FF8C00', text:'#FFE0D0', glow:'#FF4500' },
-  ocean:    { bg:['#00080A','#001A20','#00080A'], accent:'#00CFFF', accent2:'#0080AA', text:'#D0F0FF', glow:'#00CFFF' },
-  gold:     { bg:['#080600','#181200','#080600'], accent:'#FFD700', accent2:'#FFA500', text:'#FFF8E0', glow:'#FFD700' },
-  minimal:  { bg:['#F8F8F8','#FFFFFF','#F0F0F0'], accent:'#222222', accent2:'#555555', text:'#111111', glow:'#333333' }
-};
+  /* ---------- response corpus (Zaga's voice, carried by the Guardian) ---------- */
+  const N = NAME;
+  const corpus = {
+    pourquoi:[
+      `Parce que mille personnes peuvent traverser une vie, ${N}, et une seule fait battre le cœur autrement. Cette seule, c'est toi.`,
+      `Pourquoi toi ? Parce qu'avec toi, même le silence a un goût de maison. Je n'ai jamais eu ça avec personne.`,
+      `Tu n'es pas un choix parmi d'autres, ${N}. Tu es la réponse à une question que je portais avant même de te connaître.`,
+      `Parce que tu me rends meilleur sans rien demander. Près de toi, je veux être l'homme que tu mérites.`,
+      `D'autres brillent. Toi, tu réchauffes. Et un cœur qui a froid ne cherche pas la lumière — il cherche la chaleur. Il te cherche, toi.`,
+      `Parce que ton rire, ${N}, je le reconnaîtrais entre mille nuits. C'est devenu ma musique préférée.`
+    ],
+    ferais:[
+      `Ce que je ferais pour toi ? Reconstruire chaque pont que j'ai laissé tomber, et y rester, cette fois, jusqu'au bout.`,
+      `Je traverserais mes pires défauts un par un, ${N}, juste pour t'offrir une version de moi digne de toi.`,
+      `Je veillerais tard et me lèverais tôt, sans bruit, pour bâtir une vie où tu n'as plus jamais à douter de ma place.`,
+      `Te porter quand tu es fatiguée. Me taire quand tu as besoin d'être entendue. Rester quand le plus facile serait de fuir.`,
+      `Je donnerais mon temps — et le temps, ${N}, c'est tout ce qu'un homme possède vraiment. Le tien, je veux le remplir de douceur.`,
+      `Apprendre tes silences aussi bien que tes mots. C'est ça, t'aimer pour de vrai : te comprendre même quand tu ne dis rien.`
+    ],
+    doute:[
+      `Si tu doutes, ${N}, ne fuis pas — reviens vers moi et regarde-moi faire. Les preuves valent mieux que les promesses, et je suis prêt à en donner.`,
+      `Le doute est normal après une blessure. Je ne te demande pas de l'effacer. Je te demande seulement de me laisser le temps de le dissiper.`,
+      `Quand tu doutes, souviens-toi : je ne disparais plus. Une étoile ne s'éteint pas parce que le ciel se couvre.`,
+      `Doute si tu veux, ${N}. Mais regarde mes actes, pas mes peurs. C'est dans la durée que je te prouverai qui je suis.`,
+      `Je préfère que tu doutes et que tu restes, plutôt que tu fasses semblant. Je gagnerai ta confiance jour après jour, sans me presser.`
+    ],
+    decris:[
+      `Toi ? Douce comme une fin de journée, forte comme une racine. Voilà ce que tu es, ${N}.`,
+      `Tu es la preuve qu'on peut être à la fois fragile et inébranlable. Ça me bouleverse à chaque fois.`,
+      `Élégante sans effort, vraie sans masque. ${N}, tu es rare — et le rare, on en prend soin.`,
+      `Tu es ce calme que je cherche après les tempêtes. Mon port, pas mon orage.`,
+      `Un mot ne suffit pas. Mais si je devais essayer : lumineuse. Tu éclaires sans te brûler.`
+    ],
+    penses:[
+      `Si je pense à toi ? ${N}, tu es la première pensée du matin et la dernière avant la nuit. Entre les deux, tu reviens sans cesse.`,
+      `Tout le temps. Une chanson, une odeur, une rue — et te voilà. Tu habites mes journées sans même le savoir.`,
+      `Je pense à toi comme on pense à un endroit où l'on se sent enfin chez soi. Souvent. Avec soulagement.`,
+      `Oui. Et le plus dur, les jours où on était distants, c'était justement de penser à toi sans pouvoir te le dire.`,
+      `À chaque étoile que tu touches ici, ${N}, sache-le : c'est une pensée de plus que je t'avais déjà envoyée.`
+    ],
+    avenir:[
+      `Notre avenir ? Je le vois simple et vrai, ${N} : du café le matin, des projets le soir, et ta main que je ne lâche pas.`,
+      `Je ne veux pas te promettre un château. Je veux te promettre une présence. Le reste, on le construit à deux.`,
+      `Un avenir où tes peurs d'aujourd'hui te feront sourire demain, parce qu'on aura tenu. C'est ça que je veux bâtir avec toi.`,
+      `Pierre après pierre, ${N}. Pas un rêve parfait — un rêve solide. Avec tes défauts, les miens, et beaucoup de patience.`,
+      `Notre avenir commence le jour où tu te sens en sécurité avec moi. Et ce jour, je travaille à le mériter.`
+    ],
+    secret:[
+      `Un secret ? Parfois je relis nos anciens messages juste pour réentendre ta voix dans ma tête. Ne le dis à personne, ${N}.`,
+      `Voici un secret : j'ai eu peur de te perdre bien avant de risquer de te perdre. C'est cette peur qui m'a réveillé.`,
+      `Le vrai secret, ${N}, c'est que tu m'as changé sans le savoir. Je suis devenu plus doux le jour où tu es entrée dans ma vie.`,
+      `Entre nous : il m'arrive de sourire tout seul en pensant à toi. Les gens me regardent. Je m'en fiche.`,
+      `Un secret que je garde au chaud : j'ai déjà imaginé notre maison. Et dans chaque pièce, il y avait ton rire.`
+    ],
+    sourire:[
+      `Tu sais que tu es la seule personne qui me fait perdre mes mots et écrire un robot pour les retrouver ? ${N}, tu me rends ridicule, et j'adore ça.`,
+      `Petit rappel officiel du Gardien : tu es magnifique, même mal réveillée. Surtout mal réveillée, en fait.`,
+      `Si sourire était une monnaie, je serais ruiné à cause de toi, ${N}. Et ce serait la plus belle des faillites.`,
+      `Information importante : ton chéri t'a codé un gardien entier juste pour te dire que tu es la plus belle. Niveau d'amour : développeur.`,
+      `Tu lis ça depuis ton téléphone en faisant semblant de ne pas sourire. Je te connais, ${N}. Souris, va.`
+    ],
+    promets:[
+      `Je te promets ma présence, ${N}. Pas parfaite — présente. Là les bons jours, et surtout les mauvais.`,
+      `Je promets de ne plus jamais te faire douter de ma place. Et si je trébuche, de me relever vers toi, pas loin de toi.`,
+      `Je te promets de choisir, chaque jour, de te choisir encore. L'amour, c'est ça : un choix qu'on refait sans cesse.`,
+      `Promesse du Gardien et de celui qui l'a créé : tant que ces étoiles brilleront, ${N}, mon cœur sera tourné vers toi.`,
+      `Je promets de t'écouter mieux. De t'aimer plus haut. Et de rester, même quand rester demande du courage.`
+    ],
+    nuit:[
+      `Quand la nuit tombe, ${N}, lève les yeux : la même lune nous regarde tous les deux. Tu n'es jamais vraiment seule.`,
+      `La nuit, les peurs grandissent, je sais. Alors garde ceci près de toi : je veille, même de loin.`,
+      `Si tu ne trouves pas le sommeil, imagine ma main sur la tienne. Je suis là, ${N}, dans chaque étoile que tu vois.`,
+      `La nuit révèle les vraies pensées. Et la mienne, encore et toujours, c'est toi.`
+    ],
+    amour:[
+      `Je t'aime, ${N}. Pas avec des grands mots qui s'envolent — avec des actes qui restent.`,
+      `Mon amour pour toi n'est pas bruyant. Il est constant. Et la constance, c'est ce qui dure quand le bruit s'éteint.`,
+      `Je t'aime comme on aime ce qu'on a failli perdre : avec une attention nouvelle, infinie, ${N}.`,
+      `T'aimer, c'est la plus simple des décisions et la plus belle des certitudes.`
+    ],
+    triste:[
+      `Si quelque chose te pèse, ${N}, pose-le ici une seconde. Tu n'as pas à tout porter seule. Je suis là.`,
+      `Je voudrais effacer ce qui te fait mal d'un seul geste. Je ne peux pas — mais je peux rester près de toi pendant que ça passe.`,
+      `Respire, ma douce. Les nuits les plus noires finissent toujours par une aube. Et je serai là à l'aube.`,
+      `Ta tristesse ne me fait pas fuir, ${N}. Elle me rapproche. C'est aussi ça, t'aimer.`
+    ],
+    merci:[
+      `C'est moi qui te remercie, ${N} — d'être là, d'ouvrir ce que j'ai construit, de me laisser une chance.`,
+      `Ne me remercie pas. Construire ça pour toi, c'était déjà un cadeau pour moi.`,
+      `Le seul merci que je veux, c'est ton sourire. Si tu souris là, j'ai déjà tout gagné.`
+    ],
+    bien:[
+      `Ça me rend tellement heureux, ${N}. Ton bonheur, c'est mon plus grand projet.`,
+      `Tant mieux, ma reine. Et moi, je veux multiplier ces bons jours pour toi.`,
+      `Tu vas bien — alors tout va bien. Le monde est plus simple quand tu souris.`
+    ],
+    fallback:[
+      `Je n'ai pas tout compris, ${N}, mais je sais une chose avec certitude : tu comptes plus que les mots ne savent le dire.`,
+      `Quelle que soit ta question, ma réponse part toujours du même endroit : de tout ce que je ressens pour toi.`,
+      `Touche une étoile, pose-moi une question — je suis là pour toi, ${N}, aussi longtemps que tu voudras rester.`,
+      `Mon rôle est simple : te rappeler, de mille façons, à quel point tu es aimée.`
+    ]
+  };
 
-var FILTERS = {
-  none:'', vivid:'saturate(1.8) contrast(1.1)', noir:'grayscale(1) contrast(1.2)',
-  warm:'sepia(0.4) saturate(1.3) brightness(1.1)', cool:'hue-rotate(30deg) saturate(1.2)',
-  cinema:'contrast(1.15) brightness(0.9) saturate(0.85)', luxury:'sepia(0.2) contrast(1.1) brightness(1.05)'
-};
+  const chips=[
+    ['Pourquoi moi ?','pourquoi'],['Que ferais-tu pour moi ?','ferais'],
+    ['Et si je doute ?','doute'],['Décris-moi','decris'],
+    ['Penses-tu à moi ?','penses'],['Notre avenir','avenir'],
+    ['Dis-moi un secret','secret'],['Fais-moi sourire','sourire'],
+    ['Promets-moi','promets'],['Quand la nuit tombe','nuit'],
+    ['Dis-moi que tu m\u2019aimes','amour']
+  ];
 
-function notif(msg) {
-  var n = document.getElementById('notif');
-  n.textContent = msg;
-  n.classList.add('show');
-  setTimeout(function(){ n.classList.remove('show'); }, 3000);
-}
+  // anti-repeat shuffle bags
+  const bags={};
+  function pick(key){
+    const arr=corpus[key]||corpus.fallback;
+    if(!bags[key]||!bags[key].length){
+      bags[key]=arr.map((_,i)=>i);
+      for(let i=bags[key].length-1;i>0;i--){const j=Math.random()*(i+1)|0;[bags[key][i],bags[key][j]]=[bags[key][j],bags[key][i]];}
+    }
+    return arr[bags[key].pop()];
+  }
 
-// TABS
-document.querySelectorAll('.tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-    document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-    tab.classList.add('active');
-    document.getElementById('section-'+tab.dataset.tab).classList.add('active');
-    if (tab.dataset.tab === 'preview') renderFrame(0);
+  // free-text router
+  function route(q){
+    const t=' '+q.toLowerCase()+' ';
+    const has=(...w)=>w.some(x=>t.includes(x));
+    if(has('aime','amour','adore','tu m')) return 'amour';
+    if(has('peur','doute','confiance','crois','recommenc')) return 'doute';
+    if(has('triste','pleure','mal','dur','seule','fatigu')) return 'triste';
+    if(has('avenir','futur','demain','plus tard','ensemble','mariage')) return 'avenir';
+    if(has('pourquoi moi','pourquoi tu','pourquoi m')) return 'pourquoi';
+    if(has('ferais','pour moi','prouv')) return 'ferais';
+    if(has('pense','manque','souviens')) return 'penses';
+    if(has('secret','avoue','vérité','verite')) return 'secret';
+    if(has('rire','sourire','drole','drôle','blague')) return 'sourire';
+    if(has('promet','jure','promesse')) return 'promets';
+    if(has('nuit','dormir','sommeil','seule ce soir')) return 'nuit';
+    if(has('merci','gentil','beau','magnifique','adorable')) return 'merci';
+    if(has('pas bien','ne va pas','va pas','pas la forme',' non ',' mal ')) return 'triste';
+    if(has('oui','ça va','ca va','bien','super','heureuse','contente','géniale','genial')) return 'bien';
+    if(has('comment vas','bonjour','salut','coucou','bonsoir','hey')) return 'amour';
+    return 'fallback';
+  }
+
+  /* ---------- UI wiring ---------- */
+  const enter=document.getElementById('enter'),world=document.getElementById('world');
+  const orb=document.getElementById('orb'),replyEl=document.getElementById('reply');
+  const chipsEl=document.getElementById('chips');
+  const input=document.getElementById('askInput'),sendBtn=document.getElementById('askBtn');
+
+  chips.forEach(([label,key])=>{
+    const b=document.createElement('button');b.className='chip';b.textContent=label;
+    b.addEventListener('click',()=>answer(key));chipsEl.appendChild(b);
   });
-});
 
-// STYLE
-document.querySelectorAll('.style-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.style-btn').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    state.style = btn.dataset.style;
+  let typing=null;
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function deco(s){return esc(s).replace(new RegExp(N,'g'),'<span class="hl">'+N+'</span>').replace(/\n/g,'<br>');}
+  function type(text,done){
+    if(typing)clearInterval(typing);
+    orb.classList.add('think');
+    let i=0;const plain=text;
+    replyEl.innerHTML='<span class="caret">▌</span>';
+    typing=setInterval(()=>{
+      i+=reduce?plain.length:1;
+      const shown=deco(plain.slice(0,i));
+      replyEl.innerHTML=shown+(i<plain.length?'<span class="caret">▌</span>':'');
+      if(i>=plain.length){clearInterval(typing);typing=null;orb.classList.remove('think');if(done)done();}
+    },reduce?10:24);
+  }
+  const cares=[
+    `Dis-moi, ${N} — comment va ton cœur ce soir ?`,
+    `Est-ce que tu vas bien, vraiment ? Tu peux tout me confier.`,
+    `As-tu souri aujourd'hui, ma reine ? Sinon, on va arranger ça ensemble.`,
+    `Y a-t-il quelque chose qui pèse sur toi en ce moment ?`,
+    `Te sens-tu aimée, là, maintenant ? Car tu l'es, ${N}, infiniment.`
+  ];
+  let careBag=[];
+  function pickCare(){if(!careBag.length){careBag=cares.map((_,i)=>i);for(let i=careBag.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[careBag[i],careBag[j]]=[careBag[j],careBag[i]];}}return cares[careBag.pop()];}
+  function maybeAsk(){
+    if(Math.random()<0.45){
+      const q=pickCare();
+      const s=document.createElement('span');s.className='ask-back';s.textContent=q;
+      replyEl.appendChild(s);
+      speak(q,true);
+    }
+  }
+  function answer(key){const t=pick(key);type(t,maybeAsk);speak(t);}
+
+  /* ----- voice (calm male, romantic) ----- */
+  const synth=window.speechSynthesis;
+  let muted=false, voicePick=null;
+  function chooseVoice(){
+    if(!synth)return;
+    const vs=synth.getVoices();
+    voicePick = vs.find(v=>/fr/i.test(v.lang)&&/(thomas|paul|nicolas|henri|guillaume|male|homme)/i.test(v.name))
+             || vs.find(v=>/fr-FR/i.test(v.lang)) || vs.find(v=>/fr/i.test(v.lang)) || null;
+  }
+  if(synth){ chooseVoice(); synth.onvoiceschanged=chooseVoice; }
+  function speak(text,queue){
+    if(!synth||muted)return;
+    try{ if(!queue)synth.cancel(); }catch(e){}
+    const u=new SpeechSynthesisUtterance(String(text).replace(/\n+/g,'. '));
+    u.lang='fr-FR'; u.rate=.84; u.pitch=.82;
+    if(voicePick)u.voice=voicePick;
+    synth.speak(u);
+  }
+  const muteBtn=document.getElementById('mute');
+  muteBtn.addEventListener('click',()=>{
+    muted=!muted; muteBtn.textContent=muted?'🔇':'🔊';
+    muteBtn.setAttribute('aria-label', muted?'Activer le son':'Couper le son');
+    if(muted&&synth){try{synth.cancel();}catch(e){}}
   });
-});
 
-// FILTER
-document.querySelectorAll('.filter-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    state.filter = btn.dataset.filter;
-  });
-});
-
-// DURATION
-document.querySelectorAll('.dur-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.dur-btn').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    state.duration = parseInt(btn.dataset.dur);
-  });
-});
-
-// VOICE SELECT
-document.querySelectorAll('.voice-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.voice-btn').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    state.ttsVoice = btn.dataset.voice;
-  });
-});
-
-// PHOTOS
-var photoInput = document.getElementById('photo-input');
-document.getElementById('photo-btn').addEventListener('click', function(){ photoInput.click(); });
-photoInput.addEventListener('change', function() {
-  var files = Array.from(photoInput.files);
-  if (!files.length) return;
-  var loaded = 0;
-  files.forEach(function(file) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var img = new Image();
-      img.onload = function() {
-        state.photos.push({ url: e.target.result, img: img });
-        loaded++;
-        if (loaded === files.length) renderPhotoList();
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-  photoInput.value = '';
-});
-
-function renderPhotoList() {
-  var list = document.getElementById('photo-list');
-  list.innerHTML = '';
-  state.photos.forEach(function(p, i) {
-    var item = document.createElement('div');
-    item.className = 'photo-item';
-    item.innerHTML = '<img src="'+p.url+'"/><button class="del" data-i="'+i+'">×</button>';
-    list.appendChild(item);
-    item.querySelector('.del').addEventListener('click', function() {
-      state.photos.splice(parseInt(this.dataset.i), 1);
-      renderPhotoList();
+  /* ----- welcome that rises from bottom to top ----- */
+  const welcomeEl=document.getElementById('welcome');
+  const wlinesEl=document.getElementById('wlines');
+  const wprompt=document.getElementById('wprompt');
+  const wlinesData=[
+    {t:`Bonjour, notre reine.`, c:'crown'},
+    {t:`Bienvenue chez toi, dans ton monde.`},
+    {t:`Ici, tu n'es pas une invitée : tu es la reine — la dame de celui qui règne sur ce royaume numérique.`},
+    {t:`Nous sommes les gardiens que Zaga a façonnés, étoile par étoile, pour veiller sur son amour : ${N}.`},
+    {t:`Toute notre puissance est à ton service, pour tes victoires dans chacun de tes domaines, aux côtés de celui qui t'aime.`},
+    {t:`Nous t'applaudissons. Et nous t'aimons.`, c:'crown'}
+  ];
+  function startWelcome(){
+    enter.classList.add('gone');
+    wlinesEl.innerHTML='';
+    const els=wlinesData.map(d=>{
+      const p=document.createElement('p');
+      p.className='wline'+(d.c?' '+d.c:'');
+      p.innerHTML=d.t.replace(new RegExp(N,'g'),'<span class="hl">'+N+'</span>');
+      wlinesEl.appendChild(p);return p;
     });
+    requestAnimationFrame(()=>welcomeEl.classList.add('show'));
+    speak(wlinesData.map(d=>d.t).join(' '));   // unlocked by this tap
+    const step=reduce?900:2700;
+    els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),500+i*step));
+    const total=700+els.length*step;
+    setTimeout(()=>wprompt.classList.add('in'),total);
+    wprompt.addEventListener('click',finishWelcome,{once:true});
+  }
+  function finishWelcome(){
+    welcomeEl.classList.remove('show');
+    setTimeout(()=>{welcomeEl.style.display='none';},1100);
+    world.classList.add('show');
+    chipsEl.classList.add('hidden');
+    const greet=`Me revoilà, ma reine. Je suis là, rien que pour toi. Touche une étoile… ou parle-moi.`;
+    setTimeout(()=>{
+      type(greet); speak(greet);
+      chipsEl.classList.remove('hidden');
+      [...chipsEl.children].forEach((ch,i)=>setTimeout(()=>ch.classList.add('in'),110*i));
+    },750);
+  }
+  document.getElementById('enterBtn').addEventListener('click',startWelcome);
+
+  function send(){
+    const q=input.value.trim();if(!q)return;
+    input.value='';answer(route(q));input.blur();
+  }
+  sendBtn.addEventListener('click',send);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+
+  // tap sky for a shooting star (not on controls)
+  addEventListener('touchstart',e=>{
+    if(e.target.closest('button,input,.dock'))return;
+    const p=e.touches[0];if(p)shoot(p.clientX,Math.max(60,p.clientY));
+  },{passive:true});
+  addEventListener('click',e=>{
+    if(e.target.closest('button,input,.dock,#enter'))return;
+    shoot(e.clientX,Math.max(60,e.clientY));
   });
-  document.getElementById('photo-count').textContent = state.photos.length + ' photo(s)';
-  document.getElementById('photo-zone').classList.toggle('has-photos', state.photos.length > 0);
-  notif('✅ '+state.photos.length+' photo(s) chargée(s)');
-}
-
-// OVERLAYS
-document.getElementById('add-ov-btn').addEventListener('click', function() {
-  var t = document.getElementById('ov-time').value;
-  var txt = document.getElementById('ov-text').value.trim();
-  if (!txt) return;
-  state.overlays.push({ time: parseFloat(t)||0, text: txt });
-  state.overlays.sort(function(a,b){ return a.time-b.time; });
-  renderOverlays();
-  document.getElementById('ov-time').value = '';
-  document.getElementById('ov-text').value = '';
-});
-
-function renderOverlays() {
-  var list = document.getElementById('overlay-list');
-  list.innerHTML = '';
-  if (!state.overlays.length) {
-    list.innerHTML = '<div style="font-size:11px;color:#555;text-align:center;padding:8px">Aucun texte ajouté</div>';
-    return;
-  }
-  state.overlays.forEach(function(ov, i) {
-    var item = document.createElement('div');
-    item.className = 'overlay-item';
-    item.innerHTML = '<span class="ov-time">'+ov.time+'s</span><span class="ov-text">'+ov.text+'</span><button class="ov-del" data-i="'+i+'">🗑️</button>';
-    list.appendChild(item);
-    item.querySelector('.ov-del').addEventListener('click', function() {
-      state.overlays.splice(parseInt(this.dataset.i), 1);
-      renderOverlays();
-    });
-  });
-}
-renderOverlays();
-
-// AUTO TEXTS
-document.getElementById('auto-texts-btn').addEventListener('click', async function() {
-  var title = document.getElementById('vid-title').value || 'Présentation Zaga Spirit';
-  this.disabled = true;
-  this.textContent = '⏳ Génération...';
-  try {
-    var prompt = 'Génère 5 textes courts (max 5 mots) pour une vidéo intitulée "'+title+'" pour Emmanuel Sindedji, expert tech Dubai. Réponds UNIQUEMENT en JSON: [{"time":0,"text":"..."},{"time":6,"text":"..."},{"time":12,"text":"..."},{"time":18,"text":"..."},{"time":24,"text":"..."}]';
-    var res = await fetch(GROQ_URL, {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
-      body:JSON.stringify({model:GROQ_MODEL,messages:[{role:'system',content:SYSTEM_IA},{role:'user',content:prompt}],max_tokens:300,temperature:0.7})
-    });
-    var data = await res.json();
-    var txt = data.choices[0].message.content.replace(/```json|```/g,'').trim();
-    state.overlays = JSON.parse(txt);
-    renderOverlays();
-    notif('✅ Textes générés !');
-  } catch(e) { notif('❌ '+e.message); }
-  finally { this.disabled=false; this.textContent='🤖 GÉNÉRER TEXTES AUTO IA'; }
-});
-
-// TTS — Voix du navigateur
-function getTTSVoice() {
-  var voices = (window.speechSynthesis && window.speechSynthesis.getVoices) ? window.speechSynthesis.getVoices() : [];
-  var lang = ['fr-FR','fr','fr-BE','fr-CA'];
-  var filtered = voices.filter(function(v){ return lang.some(function(l){ return v.lang.startsWith(l); }); });
-  if (state.ttsVoice === 'homme-pro' || state.ttsVoice === 'homme-fort') {
-    var male = filtered.filter(function(v){ return v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('homme') || v.name.toLowerCase().includes('thomas') || v.name.toLowerCase().includes('nicolas'); });
-    if (male.length) return male[0];
-  }
-  if (state.ttsVoice === 'femme-pro') {
-    var female = filtered.filter(function(v){ return v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('amelie') || v.name.toLowerCase().includes('aurelie'); });
-    if (female.length) return female[0];
-  }
-  return filtered[0] || voices[0];
-}
-
-document.getElementById('tts-test-btn').addEventListener('click', function() {
-  var text = document.getElementById('tts-text').value;
-  if (!text) return;
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  var utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'fr-FR';
-  utt.rate = state.ttsVoice === 'homme-fort' ? 0.85 : 0.9;
-  utt.pitch = state.ttsVoice === 'homme-fort' ? 0.7 : (state.ttsVoice === 'femme-pro' ? 1.2 : 0.85);
-  utt.volume = 1;
-  var v = getTTSVoice();
-  if (v) utt.voice = v;
-  if(window.speechSynthesis) window.speechSynthesis.speak(utt);
-  notif('🔊 Voix IA en lecture...');
-});
-
-document.getElementById('tts-use-btn').addEventListener('click', function() {
-  state.useTTS = true;
-  state.audioUrl = null;
-  state.audioBlob = null;
-  notif('✅ Voix IA activée pour la vidéo !');
-  document.getElementById('rec-status').textContent = '🤖 Voix IA sélectionnée';
-});
-
-// ENREGISTREMENT VOIX
-var recBtn = document.getElementById('rec-btn');
-document.getElementById('rec-btn').addEventListener('click', async function() {
-  if (!state.recording) {
-    try {
-      var stream = await navigator.mediaDevices.getUserMedia({audio:true});
-      state.chunks = [];
-      state.mediaRecorder = new MediaRecorder(stream);
-      state.mediaRecorder.ondataavailable = function(e){ if(e.data.size>0) state.chunks.push(e.data); };
-      state.mediaRecorder.onstop = function() {
-        var blob = new Blob(state.chunks, {type:'audio/webm'});
-        state.audioBlob = blob;
-        state.audioUrl = URL.createObjectURL(blob);
-        state.useTTS = false;
-        var player = document.getElementById('audio-player');
-        player.src = state.audioUrl;
-        player.style.display = 'block';
-        document.getElementById('rec-status').textContent = '✅ Voix enregistrée !';
-        notif('✅ Voix enregistrée !');
-        stream.getTracks().forEach(function(t){ t.stop(); });
-      };
-      state.mediaRecorder.start();
-      state.recording = true;
-      recBtn.classList.add('recording');
-      recBtn.innerHTML = '⏹️ ARRÊTER L\'ENREGISTREMENT';
-      document.getElementById('rec-status').textContent = '🔴 Enregistrement en cours...';
-    } catch(e) { notif('❌ Micro non autorisé'); }
-  } else {
-    state.mediaRecorder.stop();
-    state.recording = false;
-    recBtn.classList.remove('recording');
-    recBtn.innerHTML = '🎙️ ENREGISTRER MA VOIX';
-  }
-});
-
-document.getElementById('audio-upload-btn').addEventListener('click', function(){ document.getElementById('audio-input').click(); });
-document.getElementById('audio-input').addEventListener('change', function() {
-  var file = this.files[0];
-  if (!file) return;
-  state.audioUrl = URL.createObjectURL(file);
-  state.audioBlob = file;
-  state.useTTS = false;
-  var player = document.getElementById('audio-player');
-  player.src = state.audioUrl;
-  player.style.display = 'block';
-  notif('✅ Audio importé !');
-});
-
-// CANVAS
-var canvas = document.getElementById('preview-canvas');
-var ctx = canvas.getContext('2d');
-
-function renderFrame(t) {
-  var W = canvas.width, H = canvas.height;
-  var sty = STYLES[state.style] || STYLES.cyberpunk;
-  var progress = Math.min(t / state.duration, 1);
-
-  // Background
-  var grad = ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0, sty.bg[0]);
-  grad.addColorStop(0.5, sty.bg[1]);
-  grad.addColorStop(1, sty.bg[2]);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
-
-  // Particles
-  for (var i=0; i<18; i++) {
-    var px = ((i*137+t*20)%W);
-    var py = ((i*97+t*12)%H);
-    var alpha = 0.2+0.3*Math.sin(t*2+i);
-    ctx.beginPath();
-    ctx.arc(px,py,2+Math.sin(i+t),0,Math.PI*2);
-    ctx.fillStyle = sty.accent+(Math.floor(alpha*255).toString(16).padStart(2,'0'));
-    ctx.fill();
-  }
-
-  // PHOTOS
-  if (state.photos.length > 0) {
-    var photoDur = state.duration / state.photos.length;
-    var photoIdx = Math.min(Math.floor(t/photoDur), state.photos.length-1);
-    var photoProgress = (t - photoIdx*photoDur) / photoDur;
-    var photo = state.photos[photoIdx];
-
-    var scale = 1 + photoProgress * 0.06;
-    var imgW = W * scale;
-    var imgH = H * 0.68 * scale;
-    var imgX = (W-imgW)/2;
-    var imgY = H * 0.06;
-
-    ctx.save();
-    var offC = document.createElement('canvas');
-    offC.width = W; offC.height = H*0.68;
-    var offCtx = offC.getContext('2d');
-    var src = photo.img;
-    var sr = src.width/src.height;
-    var dr = imgW/imgH;
-    var sx,sy,sw,sh;
-    if(sr>dr){sh=src.height;sw=sh*dr;sx=(src.width-sw)/2;sy=0;}
-    else{sw=src.width;sh=sw/dr;sx=0;sy=(src.height-sh)/2;}
-    offCtx.filter = FILTERS[state.filter]||'none';
-    offCtx.drawImage(src,sx,sy,sw,sh,0,0,offC.width,offC.height);
-
-    // Fade between photos
-    if(photoProgress > 0.8 && state.photos.length > 1) {
-      var nextIdx = (photoIdx+1) % state.photos.length;
-      var nextPhoto = state.photos[nextIdx];
-      var fadeA = (photoProgress-0.8)/0.2;
-      var offC2 = document.createElement('canvas');
-      offC2.width = W; offC2.height = H*0.68;
-      var offCtx2 = offC2.getContext('2d');
-      offCtx2.filter = FILTERS[state.filter]||'none';
-      offCtx2.drawImage(nextPhoto.img,0,0,offC2.width,offC2.height);
-      ctx.globalAlpha = 1-fadeA;
-      ctx.beginPath(); ctx.roundRect(imgX,imgY,imgW,imgH,18); ctx.clip();
-      ctx.drawImage(offC,imgX,imgY,imgW,imgH);
-      ctx.restore();
-      ctx.save();
-      ctx.globalAlpha = fadeA;
-      ctx.beginPath(); ctx.roundRect(imgX,imgY,imgW,imgH,18); ctx.clip();
-      ctx.drawImage(offC2,imgX,imgY,imgW,imgH);
-    } else {
-      ctx.beginPath(); ctx.roundRect(imgX,imgY,imgW,imgH,18); ctx.clip();
-      ctx.drawImage(offC,imgX,imgY,imgW,imgH);
-    }
-    ctx.restore();
-
-    // Border glow
-    ctx.save();
-    ctx.beginPath(); ctx.roundRect(imgX,imgY,imgW,imgH,18);
-    ctx.strokeStyle = sty.accent; ctx.lineWidth=2;
-    ctx.shadowBlur=20; ctx.shadowColor=sty.glow; ctx.stroke();
-    ctx.restore();
-  }
-
-  // Bottom gradient
-  var cardY = H*0.7;
-  ctx.save();
-  var cg = ctx.createLinearGradient(0,cardY,0,H);
-  cg.addColorStop(0,'rgba(0,0,0,0)');
-  cg.addColorStop(0.25,'rgba(0,0,0,0.93)');
-  cg.addColorStop(1,'rgba(0,0,0,0.98)');
-  ctx.fillStyle = cg;
-  ctx.fillRect(0,cardY,W,H-cardY);
-  ctx.restore();
-
-  // Title
-  var title = document.getElementById('vid-title').value || 'Emmanuel Sindedji';
-  var subtitle = document.getElementById('vid-subtitle').value || 'Zaga Spirit — Dubai';
-  ctx.save();
-  ctx.font = 'bold 36px Bebas Neue, sans-serif';
-  ctx.fillStyle = sty.text;
-  ctx.shadowBlur=12; ctx.shadowColor=sty.glow;
-  ctx.textAlign='center';
-  ctx.fillText(title.toUpperCase(), W/2, H*0.83);
-  ctx.font = '500 17px DM Sans, sans-serif';
-  ctx.fillStyle = sty.accent;
-  ctx.shadowBlur=6;
-  ctx.fillText(subtitle, W/2, H*0.88);
-  ctx.restore();
-
-  // Accent line
-  ctx.save();
-  ctx.fillStyle = sty.accent;
-  ctx.fillRect(W/2-30,H*0.905,60,3);
-  ctx.restore();
-
-  // Overlays
-  state.overlays.forEach(function(ov) {
-    if(t >= ov.time && t < ov.time+4) {
-      var fi = Math.min((t-ov.time)/0.4,1);
-      var fo = t > ov.time+3.5 ? 1-(t-(ov.time+3.5))/0.5 : 1;
-      ctx.save();
-      ctx.globalAlpha = fi*fo;
-      ctx.font = 'bold 20px DM Sans, sans-serif';
-      var tw = ctx.measureText(ov.text).width;
-      var rx=W/2-tw/2-18, ry=H*0.62-24, rw=tw+36, rh=34;
-      ctx.fillStyle='rgba(0,0,0,0.8)';
-      ctx.beginPath(); ctx.roundRect(rx,ry,rw,rh,17); ctx.fill();
-      ctx.strokeStyle=sty.accent; ctx.lineWidth=1.5; ctx.stroke();
-      ctx.fillStyle=sty.text; ctx.textAlign='center';
-      ctx.shadowBlur=8; ctx.shadowColor=sty.glow;
-      ctx.fillText(ov.text,W/2,H*0.62);
-      ctx.restore();
-    }
-  });
-
-  // Watermark
-  ctx.save();
-  ctx.font='bold 12px Bebas Neue,sans-serif';
-  ctx.fillStyle=sty.accent+'66';
-  ctx.textAlign='right';
-  ctx.fillText('ZAGA SPIRIT',W-12,H-12);
-  ctx.restore();
-
-  // Progress line
-  ctx.save();
-  ctx.fillStyle='#ffffff12'; ctx.fillRect(0,H-4,W,4);
-  ctx.fillStyle=sty.accent; ctx.fillRect(0,H-4,W*progress,4);
-  ctx.restore();
-}
-
-function drawFrame(ts) {
-  if(!state.playing) return;
-  if(!state.startTime) state.startTime = ts;
-  var elapsed = (ts-state.startTime)/1000;
-  if(elapsed >= state.duration) { elapsed=state.duration; state.playing=false; }
-  state.currentTime = elapsed;
-  renderFrame(elapsed);
-  var pct = elapsed/state.duration*100;
-  document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-txt').textContent = Math.floor(elapsed)+'s / '+state.duration+'s';
-  if(state.playing) state.animFrame = requestAnimationFrame(drawFrame);
-}
-
-function startPlayback() {
-  if(state.animFrame) cancelAnimationFrame(state.animFrame);
-  state.playing = true;
-  state.startTime = null;
-
-  // Audio
-  if(state.useTTS) {
-    if(window.speechSynthesis) window.speechSynthesis.cancel();
-    var text = document.getElementById('tts-text').value;
-    if(text) {
-      var utt = new SpeechSynthesisUtterance(text);
-      utt.lang = 'fr-FR';
-      utt.rate = state.ttsVoice === 'homme-fort' ? 0.85 : 0.9;
-      utt.pitch = state.ttsVoice === 'homme-fort' ? 0.7 : (state.ttsVoice === 'femme-pro' ? 1.2 : 0.85);
-      utt.volume = 1;
-      var v = getTTSVoice();
-      if(v) utt.voice = v;
-      if(window.speechSynthesis) window.speechSynthesis.speak(utt);
-    }
-  } else if(state.audioUrl) {
-    var audio = document.getElementById('audio-player');
-    audio.currentTime = 0;
-    audio.play().catch(function(){});
-  }
-
-  state.animFrame = requestAnimationFrame(drawFrame);
-}
-
-document.getElementById('preview-btn').addEventListener('click', function() {
-  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  document.querySelector('[data-tab="preview"]').classList.add('active');
-  document.getElementById('section-preview').classList.add('active');
-  startPlayback();
-});
-
-document.getElementById('play-btn').addEventListener('click', startPlayback);
-document.getElementById('pause-btn').addEventListener('click', function() {
-  state.playing=false;
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  if(state.animFrame) cancelAnimationFrame(state.animFrame);
-  var audio = document.getElementById('audio-player');
-  audio.pause();
-});
-document.getElementById('restart-btn').addEventListener('click', function() {
-  state.playing=false;
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  if(state.animFrame) cancelAnimationFrame(state.animFrame);
-  state.startTime=null;
-  renderFrame(0);
-  document.getElementById('prog-fill').style.width='0%';
-  document.getElementById('prog-txt').textContent='0s / '+state.duration+'s';
-  setTimeout(startPlayback, 200);
-});
-
-// PARTAGER
-document.getElementById('share-btn').addEventListener('click', function() {
-  canvas.toBlob(function(blob) {
-    if(navigator.share && navigator.canShare && navigator.canShare({files:[new File([blob],'zaga-video.png',{type:'image/png'})]})) {
-      navigator.share({
-        title: 'Zaga Spirit — '+document.getElementById('vid-title').value,
-        files: [new File([blob],'zaga-video.png',{type:'image/png'})]
-      }).catch(function(){});
-    } else {
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href=url; a.download='zaga-spirit.png'; a.click();
-      notif('✅ Image téléchargée !');
-    }
-  },'image/png');
-});
-
-document.getElementById('screenshot-btn').addEventListener('click', function() {
-  canvas.toBlob(function(blob) {
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href=url; a.download='zaga-frame.png'; a.click();
-    notif('✅ Image capturée !');
-  },'image/png');
-});
-
-// CHAT IA
-async function callGroq(msgs) {
-  var res = await fetch(GROQ_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
-    body:JSON.stringify({model:GROQ_MODEL,messages:[{role:'system',content:SYSTEM_IA}].concat(msgs),max_tokens:800,temperature:0.75})
-  });
-  if(!res.ok) throw new Error('Erreur '+res.status);
-  var data = await res.json();
-  return data.choices[0].message.content;
-}
-
-async function testConnection() {
-  try {
-    await callGroq([{role:'user',content:'OK?'}]);
-    document.getElementById('ia-status').textContent='● EN LIGNE';
-    document.getElementById('ia-status').style.color='#00CC66';
-  } catch(e) {
-    document.getElementById('ia-status').textContent='● Hors ligne';
-    document.getElementById('ia-status').style.color='#FF4500';
-  }
-}
-
-function addMsg(text,type) {
-  var msgs=document.getElementById('chat-msgs');
-  var div=document.createElement('div');
-  div.className='cmsg '+type;
-  if(type==='ai') div.innerHTML='<div class="cmsg-lbl">ZAGA IA</div>'+text.replace(/\n/g,'<br>');
-  else if(type==='error') div.innerHTML='<div class="cmsg-lbl">ERREUR</div>'+text;
-  else div.textContent=text;
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-function addTyping() {
-  var msgs=document.getElementById('chat-msgs');
-  var div=document.createElement('div');
-  div.className='cmsg ai typing';
-  div.innerHTML='<span></span><span></span><span></span>';
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-  return div;
-}
-
-async function sendMessage(text) {
-  text=text.trim();
-  if(!text) return;
-  document.getElementById('chat-inp').value='';
-  document.getElementById('chat-send').disabled=true;
-  addMsg(text,'user');
-  state.chatHistory.push({role:'user',content:text});
-  var typing=addTyping();
-  try {
-    var reply=await callGroq(state.chatHistory);
-    state.chatHistory.push({role:'assistant',content:reply});
-    if(state.chatHistory.length>20) state.chatHistory=state.chatHistory.slice(-20);
-    typing.remove();
-    addMsg(reply,'ai');
-  } catch(e) { typing.remove(); addMsg('Erreur: '+e.message,'error'); }
-  finally { document.getElementById('chat-send').disabled=false; }
-}
-
-document.getElementById('chat-send').addEventListener('click',function(){ sendMessage(document.getElementById('chat-inp').value); });
-document.getElementById('chat-inp').addEventListener('keydown',function(e){ if(e.key==='Enter') sendMessage(this.value); });
-document.getElementById('vid-title').addEventListener('input',function(){ renderFrame(state.currentTime); });
-document.getElementById('vid-subtitle').addEventListener('input',function(){ renderFrame(state.currentTime); });
-
-// Preload TTS voices
-
-
-
-document.addEventListener('DOMContentLoaded',function() {
-  renderFrame(0);
-  testConnection();
-});
+})();
 </script>
 </body>
 </html>
