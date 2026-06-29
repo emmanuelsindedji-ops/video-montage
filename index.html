@@ -218,11 +218,43 @@
   .games{right:calc(max(4vw,1rem) + 104px) !important;display:none}
   .games.in{display:flex}
 
+  /* DÉCRET ROYAL */
+  #decree{position:fixed;inset:0;z-index:8;display:flex;align-items:flex-start;justify-content:center;
+    padding:7vh 6vw 6vh;background:radial-gradient(120% 100% at 50% 0%, rgba(42,20,60,.96), rgba(5,4,16,.98));
+    opacity:0;visibility:hidden;transition:opacity .6s ease, visibility .6s;overflow:auto}
+  #decree.show{opacity:1;visibility:visible}
+  .scroll-card{position:relative;max-width:30rem;width:100%;margin:auto;
+    background:linear-gradient(160deg,#f7eed9,#ead7ad 60%,#dcc491);
+    border-radius:14px;padding:2.4rem 1.8rem 2.8rem;text-align:center;color:#3a2a12;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 2px rgba(150,110,40,.55), inset 0 0 0 7px rgba(150,110,40,.22);
+    transform:scale(.72);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1), opacity .9s}
+  #decree.show .scroll-card{transform:scale(1);opacity:1}
+  .scroll-card .deco{position:absolute;top:9px;left:9px;right:9px;bottom:9px;
+    border:1px solid rgba(150,110,40,.45);border-radius:9px;pointer-events:none}
+  .decree-title{font-family:'Pinyon Script',cursive;font-size:clamp(2.4rem,12vw,3.4rem);color:#7a5618;line-height:1}
+  .decree-sub{font-family:'Cormorant Garamond';letter-spacing:.28em;text-transform:uppercase;
+    font-size:.78rem;color:#8a6a2a;margin:.25rem 0 1.3rem}
+  .decree-line{font-family:'Cormorant Garamond';font-weight:500;font-size:clamp(1.05rem,4.5vw,1.25rem);
+    line-height:1.5;margin:.4rem 0;color:#3a2a12;opacity:0;transform:translateY(10px);
+    transition:opacity .7s ease, transform .7s ease}
+  .decree-line.in{opacity:1;transform:none}
+  .decree-name{font-family:'Playfair Display',serif;font-weight:700;
+    font-size:clamp(1.9rem,9vw,2.6rem);color:#7a5618;letter-spacing:.03em;margin:.5rem 0}
+  .seal{width:92px;height:92px;margin:1.3rem auto .3rem;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%, #c75f69, #8e2f3c 68%, #5e1a26);
+    display:flex;align-items:center;justify-content:center;color:#f7e0c0;font-size:1.9rem;
+    box-shadow:0 8px 18px rgba(0,0,0,.4), inset 0 0 0 3px rgba(247,224,192,.35);
+    transform:scale(0) rotate(-28deg);opacity:0;
+    transition:transform .55s cubic-bezier(.2,1.5,.4,1), opacity .4s}
+  .seal.in{transform:scale(1) rotate(-8deg);opacity:1}
+  .decree-sign{font-family:'Pinyon Script',cursive;font-size:clamp(1.7rem,8vw,2.2rem);color:#5a3e12;margin-top:.3rem}
+
   @media (prefers-reduced-motion: reduce){
     .heartbtn{animation:none}.orb.think{animation:none}.caret{animation:none}
     .pulse{animation:none}
     .wline{transition:opacity .5s ease}
     .couple{animation:none}.lilheart{animation:none}
+    .scroll-card,.seal,.decree-line{transition:opacity .4s ease}
   }
 </style>
 </head>
@@ -280,6 +312,23 @@
   <div class="g-stage" id="gameStage">
     <button class="g-back" id="gameBack">⟵ Jeux</button>
     <div id="gameInner"></div>
+  </div>
+</div>
+
+<!-- DÉCRET ROYAL -->
+<div id="decree">
+  <button class="cine-x" id="decreeClose" aria-label="Fermer" style="position:absolute;top:max(2.6vh,1rem);right:max(4vw,1rem);z-index:9">✕</button>
+  <div class="scroll-card">
+    <div class="deco"></div>
+    <div class="decree-title">Décret Royal</div>
+    <div class="decree-sub">Royaume numérique de Zaga</div>
+    <div class="decree-line" data-i="0">Par la présente, devant toutes les étoiles témoins,</div>
+    <div class="decree-line" data-i="1">nous, les gardiens de ce royaume, proclamons solennellement</div>
+    <div class="decree-line decree-name" data-i="2">Sylvana</div>
+    <div class="decree-line" data-i="3">Reine de ce monde et souveraine du cœur de son créateur.</div>
+    <div class="decree-line" data-i="4">Qu'elle soit aimée, honorée et protégée — aujourd'hui, et pour toujours.</div>
+    <div class="seal" id="decreeSeal">♥</div>
+    <div class="decree-line decree-sign" data-i="5">Zaga, et ses mille gardiens</div>
   </div>
 </div>
 
@@ -494,6 +543,7 @@
 
   const chips=[
     ['✦ Pensée du jour','__daily'],
+    ['👑 Ton décret royal','__decree'],
     ['💌 Le cœur de ton homme','coeur'],
     ['Pourquoi moi ?','pourquoi'],['Que ferais-tu pour moi ?','ferais'],
     ['Et si je doute ?','doute'],['Décris-moi','decris'],
@@ -553,7 +603,7 @@
 
   chips.forEach(([label,key])=>{
     const b=document.createElement('button');b.className='chip';b.textContent=label;
-    b.addEventListener('click',()=> key==='__cinema'?openCinema(): key==='__daily'?handleDaily(true): answer(key));chipsEl.appendChild(b);
+    b.addEventListener('click',()=> key==='__cinema'?openCinema(): key==='__daily'?handleDaily(true): key==='__decree'?openDecree(): answer(key));chipsEl.appendChild(b);
   });
 
   let typing=null;
@@ -994,6 +1044,22 @@
   document.getElementById('gamesHome').addEventListener('click',gamesHome);
   document.getElementById('gameBack').addEventListener('click',showMenu);
   document.getElementById('gamesBtn').addEventListener('click',openGames);
+
+  /* ----- Décret Royal ----- */
+  const decree=document.getElementById('decree');
+  const decreeSeal=document.getElementById('decreeSeal');
+  function openDecree(){
+    decree.classList.add('show');
+    const lines=[...decree.querySelectorAll('.decree-line')];
+    lines.forEach(l=>l.classList.remove('in'));decreeSeal.classList.remove('in');
+    const step=reduce?500:1050;
+    lines.forEach((l,i)=>setTimeout(()=>l.classList.add('in'),600+i*step));
+    setTimeout(()=>decreeSeal.classList.add('in'),600+lines.length*step);
+    const speech=`Décret royal. Par la présente, devant toutes les étoiles témoins, nous proclamons solennellement ${N} reine de ce monde et souveraine du cœur de son créateur. Qu'elle soit aimée, honorée et protégée, aujourd'hui et pour toujours.`;
+    setTimeout(()=>speak(speech),800);
+  }
+  function closeDecree(){decree.classList.remove('show');if(synth){try{synth.cancel();}catch(e){}}}
+  document.getElementById('decreeClose').addEventListener('click',closeDecree);
 
   document.getElementById('enterBtn').addEventListener('click',startWelcome);
 
