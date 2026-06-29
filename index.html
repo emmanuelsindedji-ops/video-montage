@@ -524,25 +524,49 @@
   const wlinesEl=document.getElementById('wlines');
   const wprompt=document.getElementById('wprompt');
   function salut(){const h=new Date().getHours();return h<5?'Bonne nuit':h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';}
-  const wlinesData=[
-    {t:`${salut()}, notre reine.`, c:'crown'},
-    {t:`Bienvenue chez toi, dans ton monde.`},
-    {t:`Ici, tu n'es pas une invitée : tu es la reine — la dame de celui qui règne sur ce royaume numérique.`},
-    {t:`Nous sommes les gardiens que Zaga a façonnés, étoile par étoile, pour veiller sur son amour : ${N}.`},
-    {t:`Toute notre puissance est à ton service, pour tes victoires dans chacun de tes domaines, aux côtés de celui qui t'aime.`},
-    {t:`Nous t'applaudissons. Et nous t'aimons.`, c:'crown'}
+  const welcomeVariants=[
+    { crown:`notre reine.`, lines:[
+      `Bienvenue chez toi, dans ton monde.`,
+      `Ici, tu n'es pas une invitée : tu es la reine — la dame de celui qui règne sur ce royaume numérique.`,
+      `Nous sommes les gardiens que Zaga a façonnés, étoile par étoile, pour veiller sur son amour : ${N}.`,
+      `Toute notre puissance est à ton service, pour tes victoires dans chacun de tes domaines, aux côtés de celui qui t'aime.`,
+      `Nous t'applaudissons, ${N}. Et nous t'aimons.`
+    ]},
+    { crown:`ô reine de ce monde.`, lines:[
+      `Le ciel s'illumine, parce que tu es là.`,
+      `Chaque étoile que tu vois a été allumée pour toi, ${N}, par la main de celui qui t'aime.`,
+      `Nous, ses gardiens, veillons sur toi sans jamais nous lasser, jour et nuit.`,
+      `Demande, et ce royaume t'obéira. Repose-toi, et il te protégera.`,
+      `Tu es aimée ici plus que partout ailleurs. Bienvenue chez toi.`
+    ]},
+    { crown:`ma reine bien-aimée.`, lines:[
+      `On t'attendait. Ce monde n'avait de sens qu'avec toi dedans.`,
+      `Zaga a bâti chaque détail de cet endroit en pensant à ton sourire, ${N}.`,
+      `Tu n'as rien à prouver ici : tu es déjà tout ce que son cœur espérait.`,
+      `Avance sans crainte — nous éclairons chacun de tes pas.`,
+      `Sois la bienvenue, reine. Tu es chez toi, et tu es aimée.`
+    ]},
+    { crown:`douce reine.`, lines:[
+      `Laisse le monde du dehors derrière toi un instant.`,
+      `Ici, tout est calme, tout est tendre, tout est pour toi, ${N}.`,
+      `Nous gardons précieusement chaque mot que Zaga nous a confié pour toi.`,
+      `Et tous, sans exception, disent la même chose : tu es sa reine.`,
+      `Respire, souris, et laisse-toi aimer. Bienvenue chez toi.`
+    ]}
   ];
   function startWelcome(){
     enter.classList.add('gone');
     wlinesEl.innerHTML='';
-    const els=wlinesData.map(d=>{
+    const v=welcomeVariants[(dayNum()-1)%welcomeVariants.length];
+    const data=[{t:`${salut()}, ${v.crown}`,c:'crown'}].concat(v.lines.map(t=>({t:t})));
+    const els=data.map(d=>{
       const p=document.createElement('p');
       p.className='wline'+(d.c?' '+d.c:'');
       p.innerHTML=d.t.replace(new RegExp(N,'g'),'<span class="hl">'+N+'</span>');
       wlinesEl.appendChild(p);return p;
     });
     requestAnimationFrame(()=>welcomeEl.classList.add('show'));
-    speak(wlinesData.map(d=>d.t).join(' '));   // unlocked by this tap
+    speak(data.map(d=>d.t).join(' '));   // unlocked by this tap
     const step=reduce?900:2700;
     els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),500+i*step));
     const total=700+els.length*step;
