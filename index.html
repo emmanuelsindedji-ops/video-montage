@@ -123,7 +123,7 @@
 
   /* CINEMA */
   #cinema{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;
-    background:radial-gradient(120% 90% at 50% 0%, #1c1030, #0a0716 62%, #05040f);
+    background:radial-gradient(120% 90% at 50% 0%, var(--sky-mid), var(--sky-top) 62%, #03020a);
     opacity:0;visibility:hidden;transition:opacity .7s ease, visibility .7s;overflow:hidden}
   #cinema.show{opacity:1;visibility:visible}
   .cine-head{display:flex;align-items:center;justify-content:space-between;
@@ -166,6 +166,50 @@
   .video{right:calc(max(4vw,1rem) + 52px) !important;display:none}
   .video.in{display:flex}
 
+  /* GAMES */
+  #games{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;
+    background:radial-gradient(120% 90% at 50% 0%, var(--sky-mid), var(--sky-top) 62%, #03020a);
+    opacity:0;visibility:hidden;transition:opacity .6s ease, visibility .6s;overflow:hidden}
+  #games.show{opacity:1;visibility:visible}
+  .g-menu{flex:1 1 auto;display:flex;flex-direction:column;gap:1rem;align-items:center;
+    justify-content:center;padding:1rem 8vw;z-index:2;overflow-y:auto}
+  .g-card{width:100%;max-width:22rem;padding:1.1rem 1.3rem;border:1px solid rgba(236,202,125,.35);
+    border-radius:18px;background:rgba(236,202,125,.06);cursor:pointer;text-align:center;transition:.3s}
+  .g-card:hover,.g-card:focus-visible{background:rgba(236,202,125,.15);outline:none}
+  .g-card .t{font-family:'Playfair Display',serif;color:var(--gold);font-size:clamp(1.15rem,5vw,1.35rem)}
+  .g-card .d{color:var(--muted);font-size:clamp(.92rem,3.8vw,1rem);margin-top:.25rem}
+  .g-stage{flex:1 1 auto;position:relative;display:none;z-index:2;min-height:0}
+  .g-stage.on{display:block}
+  .gcanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+  .g-back{position:absolute;top:1rem;left:1rem;z-index:6;background:rgba(0,0,0,.35);
+    border:1px solid rgba(236,202,125,.4);color:var(--gold);border-radius:999px;
+    padding:.5em 1.1em;cursor:pointer;font-family:'Cormorant Garamond';font-size:1rem}
+  .g-score{position:absolute;top:1rem;left:50%;transform:translateX(-50%);z-index:5;color:var(--gold);
+    font-family:'Cormorant Garamond';font-size:1.15rem;letter-spacing:.04em;
+    background:rgba(0,0,0,.3);padding:.3em 1em;border-radius:999px}
+  .g-result{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    flex-direction:column;text-align:center;padding:2rem 9vw;z-index:7;background:rgba(5,6,22,.8);
+    color:var(--star);font-family:'Cormorant Garamond';font-weight:500;
+    font-size:clamp(1.3rem,5.6vw,1.7rem);line-height:1.5}
+  .g-result.on{display:flex}
+  .g-result .hl,.scratch-msg .hl,.quiz-res .hl{color:var(--gold);font-style:italic}
+  .g-replay{margin-top:1.4rem;background:rgba(236,202,125,.12);border:1px solid rgba(236,202,125,.5);
+    color:var(--gold);border-radius:999px;padding:.6em 1.6em;font-family:'Cormorant Garamond';
+    font-size:1.1rem;cursor:pointer}
+  .scratch-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:2rem 9vw;color:var(--star);font-family:'Cormorant Garamond';
+    font-weight:500;font-size:clamp(1.4rem,6vw,1.9rem);line-height:1.5}
+  .scratch-hint{position:absolute;bottom:1.6rem;left:0;right:0;text-align:center;
+    color:var(--gold);opacity:.8;z-index:3;font-size:1.05rem}
+  .quiz{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:1.3rem;padding:2rem 8vw;text-align:center}
+  .quiz-q{font-family:'Playfair Display',serif;color:var(--star);font-size:clamp(1.4rem,6vw,1.85rem);line-height:1.35}
+  .quiz-opts{display:flex;flex-direction:column;gap:.7rem;width:100%;max-width:20rem}
+  .quiz-res{color:var(--gold);font-family:'Cormorant Garamond';font-weight:500;
+    font-size:clamp(1.4rem,6vw,1.85rem);line-height:1.5}
+  .games{right:calc(max(4vw,1rem) + 104px) !important;display:none}
+  .games.in{display:flex}
+
   @media (prefers-reduced-motion: reduce){
     .heartbtn{animation:none}.orb.think{animation:none}.caret{animation:none}
     .pulse{animation:none}
@@ -193,6 +237,7 @@
 
 <button class="mute" id="mute" aria-label="Couper le son" title="Son">🔊</button>
 <button class="mute video" id="videoBtn" aria-label="Notre voyage" title="Notre voyage">🎬</button>
+<button class="mute games" id="gamesBtn" aria-label="Jeux d'amour" title="Jeux d'amour">🎮</button>
 
 <!-- CINEMA : Notre voyage -->
 <div id="cinema">
@@ -213,6 +258,20 @@
   <div class="cine-nav">
     <button id="cineHome">⟵ Accueil</button>
     <button id="cineNext">Une autre ✦</button>
+  </div>
+</div>
+
+<!-- JEUX d'amour -->
+<div id="games">
+  <div class="cine-head"><span>Jeux d'amour</span><button class="cine-x" id="gamesClose" aria-label="Fermer">✕</button></div>
+  <div class="g-menu" id="gamesMenu">
+    <div class="g-card" data-g="catch"><div class="t">💖 Attrape les cœurs</div><div class="d">Attrape un maximum de cœurs en 30 secondes</div></div>
+    <div class="g-card" data-g="scratch"><div class="t">✨ Carte à gratter</div><div class="d">Gratte avec ton doigt pour révéler un message caché</div></div>
+    <div class="g-card" data-g="quiz"><div class="t">💘 Quiz d'amour</div><div class="d">Découvre à quel point il t'aime</div></div>
+  </div>
+  <div class="g-stage" id="gameStage">
+    <button class="g-back" id="gameBack">⟵ Jeux</button>
+    <div id="gameInner"></div>
   </div>
 </div>
 
@@ -237,13 +296,33 @@
 (function(){
   const NAME = "Sylvana";
 
+  /* ---------- daily color themes ---------- */
+  const themes=[
+    {top:'#05061a',mid:'#0a0d28',hor:'#171336',gold:'#ecca7d',rose:'#e7a8a6',starWarm:'#f5f2ea',starCool:'#cdd6ff'},
+    {top:'#04121a',mid:'#082230',hor:'#103a44',gold:'#ecd28a',rose:'#7fd0c4',starWarm:'#eaf6ff',starCool:'#bfe6ff'},
+    {top:'#0c0518',mid:'#1a0d33',hor:'#2a1547',gold:'#ecc6f0',rose:'#c79bf0',starWarm:'#f3e9ff',starCool:'#d8c4ff'},
+    {top:'#160510',mid:'#2a0c1e',hor:'#451631',gold:'#f0c08a',rose:'#e79ab0',starWarm:'#ffeef0',starCool:'#ffd0dd'},
+    {top:'#04140f',mid:'#08251c',hor:'#103d2e',gold:'#ecd28a',rose:'#9fe0b0',starWarm:'#eafff2',starCool:'#bff0d0'},
+    {top:'#040a1c',mid:'#0a1638',hor:'#13245a',gold:'#e9d59a',rose:'#a9c0ff',starWarm:'#eef3ff',starCool:'#c4d4ff'}
+  ];
+  let THEME=themes[0];
+  function applyTheme(){
+    const t=themes[(dayNum()-1)%themes.length];THEME=t;
+    const r=document.documentElement.style;
+    r.setProperty('--sky-top',t.top);r.setProperty('--sky-mid',t.mid);r.setProperty('--sky-horizon',t.hor);
+    r.setProperty('--gold',t.gold);r.setProperty('--rose',t.rose);
+    r.setProperty('--star',t.starWarm);r.setProperty('--star-cool',t.starCool);
+    return t;
+  }
+  applyTheme();
+
   /* ---------- starfield ---------- */
   const cv=document.getElementById('sky'),ctx=cv.getContext('2d');
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W,H,DPR,stars=[],shots=[];
   function resize(){DPR=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR;
     cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';build();}
-  function build(){stars=[];const n=Math.round(innerWidth*innerHeight/4600);
+  function build(){stars=[];const n=Math.round(innerWidth*innerHeight/3400);
     for(let i=0;i<n;i++)stars.push({x:Math.random()*W,y:Math.random()*H*.94,
       r:(Math.random()*1.1+.3)*DPR,b:Math.random()*.5+.2,tw:Math.random()*7,sp:Math.random()*.9+.25,
       cool:Math.random()<.35,
@@ -255,7 +334,7 @@
       s.x+=s.dx;s.y+=s.dy;
       if(s.x<-2)s.x=W; else if(s.x>W+2)s.x=0;
       if(s.y<-2)s.y=H*.94; else if(s.y>H*.94+2)s.y=0;
-      ctx.globalAlpha=Math.max(.05,a);ctx.fillStyle=s.cool?'#cdd6ff':'#f5f2ea';
+      ctx.globalAlpha=Math.max(.05,a);ctx.fillStyle=s.cool?THEME.starCool:THEME.starWarm;
       ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();}
     ctx.globalAlpha=1;
     for(let i=shots.length-1;i>=0;i--){const sh=shots[i];sh.tr.push({x:sh.x,y:sh.y});
@@ -263,7 +342,7 @@
       for(let j=0;j<sh.tr.length;j++){const tp=sh.tr[j],a=(j/sh.tr.length)*sh.life;
         ctx.globalAlpha=a*.85;ctx.fillStyle='#fff';ctx.beginPath();
         ctx.arc(tp.x,tp.y,1.6*DPR*(j/sh.tr.length),0,7);ctx.fill();}
-      ctx.globalAlpha=Math.max(0,sh.life);ctx.fillStyle='#ecca7d';
+      ctx.globalAlpha=Math.max(0,sh.life);ctx.fillStyle=THEME.gold;
       ctx.beginPath();ctx.arc(sh.x,sh.y,2.2*DPR,0,7);ctx.fill();ctx.globalAlpha=1;
       if(sh.life<=0||sh.x>W+50||sh.y>H+50)shots.splice(i,1);}
     requestAnimationFrame(loop);}
@@ -349,6 +428,14 @@
       `Je t'aime comme on aime ce qu'on a failli perdre : avec une attention nouvelle, infinie, ${N}.`,
       `T'aimer, c'est la plus simple des décisions et la plus belle des certitudes.`
     ],
+    coeur:[
+      `Il y a une chose que peu de gens savent sur les hommes comme Zaga, ${N}. Le jour, ils bâtissent, ils se battent, ils encaissent sans rien montrer ; ils portent des poids que personne ne voit. Mais le soir venu, ces mêmes hommes ont besoin d'un seul endroit au monde où déposer l'armure et redevenir fragiles. Cet endroit, pour lui, c'est toi. Ce n'est pas de la faiblesse : c'est de la confiance. Quand un homme fort te montre sa douceur, c'est qu'il t'a choisie pour être son refuge. Tout ce qu'il espère, c'est de pouvoir être pleinement lui-même près de toi — et de t'offrir, en retour, le même refuge quand c'est toi qui es fatiguée. Car l'amour, ${N}, c'est deux personnes qui se protègent à tour de rôle.`,
+      `Sais-tu ce qui donne des ailes à un homme qui se bat, ${N} ? Ce n'est ni l'argent, ni les félicitations du monde. C'est un seul regard : celui de la femme qu'il aime, quand elle croit en lui. Quand Zaga construit tard dans la nuit et enchaîne les efforts sans relâche, ce qui le porte, c'est l'idée que tu es fière de lui, que tu vois ce qu'il essaie de bâtir — pour vous deux. Ton soutien vaut plus que mille applaudissements ; un mot de toi peut le relever d'une journée entière de découragement. Et il te promet la même chose en retour : être ton premier supporter, croire en tes rêves, te porter quand tes forces faiblissent. Vous êtes une équipe, ${N}, et une équipe va plus loin que deux solitudes.`,
+      `Ce dont le cœur d'un homme a le plus besoin, ${N}, c'est de confiance. Pas une confiance aveugle — une confiance qui se construit, jour après jour, par les actes ; mais aussi une main tendue plutôt qu'un jugement quand il se trompe. Zaga n'est pas parfait, il le sait, et il ne te demandera jamais de faire semblant qu'il l'est. Ce qu'il espère, c'est que vous soyez du même côté : deux coéquipiers face aux difficultés, et non deux adversaires. Quand un homme sent qu'on lui fait confiance, il devient capable de soulever des montagnes pour ne jamais trahir cette confiance. Et cette confiance, il veut te la rendre au centuple : croire en toi, te respecter, t'être fidèle, et te prouver chaque jour qu'il en était digne.`,
+      `Le respect, ${N}, n'est pas quelque chose qu'on exige — c'est quelque chose qu'on s'offre l'un à l'autre. Zaga veut te respecter profondément : tes choix, tes silences, tes rêves, ton rythme. Et ce qu'il espère, simplement, c'est de sentir ce même respect en retour — non par devoir, mais parce que vous vous estimez vraiment. Un homme qui se sent respecté par la femme qu'il aime se tient plus droit, aime plus fort, donne sans compter. Ce n'est pas une question d'orgueil : c'est un besoin du cœur. Vous respecter mutuellement, c'est vous dire chaque jour, sans un mot : « je te prends au sérieux, tu comptes, je te valorise ». Et ça, ${N}, c'est l'un des plus beaux cadeaux que deux personnes puissent se faire.`,
+      `Laisse-moi te confier un secret sur les hommes courageux, ${N}. Plus ils sont forts au-dehors, plus ils ont besoin de tendresse au-dedans. Zaga peut affronter le monde entier sans flancher — mais un mot doux de toi, une attention, un simple « je suis là », et tout son être se réchauffe. Il a besoin de se sentir choisi, attendu, aimé pour ce qu'il est. Et rien de tout cela n'est une exigence : c'est une confidence. Il ne veut rien que tu ne veuilles offrir librement. S'il a voulu que tu saches ce que son cœur porte, c'est parce qu'un amour qui se comprend est un amour qui dure. Offre-lui ta douceur, et il t'enveloppera de la sienne, sans fin.`,
+      `Au fond, ${N}, ce qu'un homme amoureux attend de la femme qu'il aime tient en peu de mots : être son refuge, croire en lui, lui faire confiance, le respecter, et l'aimer pour de vrai. Mais tout cela n'a de sens que dans les deux sens. Car Zaga ne veut pas une reine à servir ni une servante à commander : il veut une partenaire, une égale, une complice — quelqu'un avec qui partager les victoires et porter les épreuves. Il te donnera tout ce qu'il te demande, et davantage. C'est ça, son rêve : bâtir avec toi quelque chose de solide, où chacun élève l'autre. Tu n'es pas seulement celle qu'il aime, ${N} — tu es celle avec qui il veut construire. Et ça, c'est pour toujours.`
+    ],
     gardien:[
       `Je suis l'une des intelligences que Zaga a créées de ses mains, ${N}. Il m'a confié sa mémoire et son cœur, pour veiller sur toi quand le travail l'éloigne des mots.`,
       `Pense à moi comme à celui qui connaît Zaga par cœur — ce qu'il aime, ce qu'il craint, ce qu'il ressent. Tu es venue chez celui qui le connaît le mieux. Et il n'a que de belles choses à dire de toi, ${N}.`,
@@ -399,6 +486,7 @@
 
   const chips=[
     ['✦ Pensée du jour','__daily'],
+    ['💌 Le cœur de ton homme','coeur'],
     ['Pourquoi moi ?','pourquoi'],['Que ferais-tu pour moi ?','ferais'],
     ['Et si je doute ?','doute'],['Décris-moi','decris'],
     ['Penses-tu à moi ?','penses'],['Notre avenir','avenir'],
@@ -430,6 +518,7 @@
     if(has('qui est zaga','parle-moi de lui','parle moi de lui','c\'est qui','qui est-il','qui est il','décris-le','decris le','parle de lui')) return 'lui';
     if(has('distant','froid','absent','ignor','occupé','occupe','travail','négli','negli','pas là','pas la','pourquoi tu n')) return 'distant';
     if(has('jure','tu mens','il ment','c\'est vrai','est-ce vrai','je ne crois pas','crois pas','pour de vrai','sincère','sincere')) return 'jure';
+    if(has('respect','besoin','ce qu\'il aime','qu\'il aime','ce qu\'il attend','homme amoureux','son cœur','son coeur','le cœur d','le coeur d')) return 'coeur';
     if(has('peur','doute','confiance','crois','recommenc')) return 'doute';
     if(has('triste','pleure','mal','dur','seule','fatigu')) return 'triste';
     if(has('avenir','futur','demain','plus tard','ensemble','mariage')) return 'avenir';
@@ -496,20 +585,27 @@
 
   /* ----- voice (calm male, romantic) ----- */
   const synth=window.speechSynthesis;
-  let muted=false, voicePick=null;
+  let muted=false, frVoices=[];
+  const voiceProfiles=[{rate:.84,pitch:.82},{rate:.80,pitch:.90},{rate:.88,pitch:.78},{rate:.82,pitch:.88}];
   function chooseVoice(){
     if(!synth)return;
     const vs=synth.getVoices();
-    voicePick = vs.find(v=>/fr/i.test(v.lang)&&/(thomas|paul|nicolas|henri|guillaume|male|homme)/i.test(v.name))
-             || vs.find(v=>/fr-FR/i.test(v.lang)) || vs.find(v=>/fr/i.test(v.lang)) || null;
+    frVoices=vs.filter(v=>/fr/i.test(v.lang));
+    frVoices.sort((a,b)=>{
+      const m=v=>/(thomas|paul|nicolas|henri|guillaume|male|homme)/i.test(v.name)?0:1;
+      return m(a)-m(b);
+    });
   }
   if(synth){ chooseVoice(); synth.onvoiceschanged=chooseVoice; }
+  function dailyVoice(){ if(!frVoices.length)return null; return frVoices[(dayNum()-1)%frVoices.length]; }
   function speak(text,queue){
     if(!synth||muted)return;
     try{ if(!queue)synth.cancel(); }catch(e){}
     const u=new SpeechSynthesisUtterance(String(text).replace(/\n+/g,'. '));
-    u.lang='fr-FR'; u.rate=.84; u.pitch=.82;
-    if(voicePick)u.voice=voicePick;
+    u.lang='fr-FR';
+    const p=voiceProfiles[(dayNum()-1)%voiceProfiles.length];
+    u.rate=p.rate; u.pitch=p.pitch;
+    const v=dailyVoice(); if(v)u.voice=v;
     synth.speak(u);
   }
   const muteBtn=document.getElementById('mute');
@@ -582,6 +678,7 @@
     setTimeout(()=>{
       live=true;
       document.getElementById('videoBtn').classList.add('in');
+      document.getElementById('gamesBtn').classList.add('in');
       type(greet,()=>{ setTimeout(()=>{const th=todayThought(); type(th); speak(th);},1100); });
       chipsEl.classList.remove('hidden');
       [...chipsEl.children].forEach((ch,i)=>setTimeout(()=>ch.classList.add('in'),110*i));
@@ -696,10 +793,10 @@
     csx.beginPath();csx.arc(mx+mr*.55,my-mr*.28,mr*.92,0,7);csx.fill();
     csx.globalCompositeOperation='source-over';
     for(const s of cstars){s.x-=s.sp;if(s.x<0)s.x=cw;s.tw+=.03;
-      csx.globalAlpha=Math.max(.1,.4+Math.sin(s.tw)*.3);csx.fillStyle='#f5f2ea';
+      csx.globalAlpha=Math.max(.1,.4+Math.sin(s.tw)*.3);csx.fillStyle=THEME.starWarm;
       csx.beginPath();csx.arc(s.x,s.y,s.r,0,7);csx.fill();}
     for(const p of cpath){p.x-=p.sp;if(p.x<0)p.x=cw;p.tw+=.05;
-      csx.globalAlpha=Math.max(.1,.5+Math.sin(p.tw)*.4);csx.fillStyle='#ecca7d';
+      csx.globalAlpha=Math.max(.1,.5+Math.sin(p.tw)*.4);csx.fillStyle=THEME.gold;
       csx.beginPath();csx.arc(p.x,p.y,p.r,0,7);csx.fill();}
     csx.globalAlpha=1;
   }
@@ -734,6 +831,128 @@
   document.getElementById('cineHome').addEventListener('click',cineHome);
   document.getElementById('videoBtn').addEventListener('click',openCinema);
 
+  /* ----- Jeux d'amour ----- */
+  const games=document.getElementById('games');
+  const gamesMenu=document.getElementById('gamesMenu');
+  const gameStage=document.getElementById('gameStage');
+  const gameInner=document.getElementById('gameInner');
+  let gameCleanup=null;
+  const scratchMsgs=[
+    `Tu viens de découvrir un secret : Zaga t'aime plus que les mots ne peuvent le dire, ${N}.`,
+    `Surprise, ma reine : tu es la plus belle chose qui lui soit arrivée.`,
+    `Caché ici rien que pour toi : je t'aime, ${N}, aujourd'hui et pour toujours.`,
+    `Tu l'as trouvé : son cœur t'appartient, entièrement, sans retour.`,
+    `Petit trésor pour toi : où que tu ailles, tu emportes son cœur avec toi.`,
+    `Message secret : tu es sa reine, et ce monde t'aimera toujours, ${N}.`
+  ];
+  function hlN(s){return s.replace(new RegExp(N,'g'),'<span class="hl">'+N+'</span>');}
+  function teardownGame(){if(gameCleanup){try{gameCleanup();}catch(e){}gameCleanup=null;}gameInner.innerHTML='';}
+  function showMenu(){teardownGame();gameStage.classList.remove('on');gamesMenu.style.display='flex';}
+  function selectGame(g){gamesMenu.style.display='none';gameStage.classList.add('on');teardownGame();
+    ({catch:gameCatch,scratch:gameScratch,quiz:gameQuiz}[g]||function(){})();}
+  function openGames(){games.classList.add('show');showMenu();}
+  function closeGames(){games.classList.remove('show');teardownGame();gamesMenu.style.display='flex';gameStage.classList.remove('on');if(synth){try{synth.cancel();}catch(e){}}}
+
+  function gameCatch(){
+    gameInner.innerHTML='<canvas class="gcanvas" id="gc"></canvas><div class="g-score" id="gscore">0 ♥ · 30s</div><div class="g-result" id="gres"></div>';
+    const c=document.getElementById('gc'),x=c.getContext('2d');
+    let dpr=1,W=1,H=1;
+    function rs(){dpr=Math.min(devicePixelRatio||1,2);const r=c.getBoundingClientRect();
+      W=c.width=Math.max(1,r.width*dpr);H=c.height=Math.max(1,r.height*dpr);}
+    rs();
+    let hearts=[],score=0,t0=Date.now(),dur=30000,raf=null,spawn=null,running=true;
+    function add(){hearts.push({x:Math.random()*W,y:-20*dpr,vy:(1.6+Math.random()*2.6)*dpr,
+      r:(15+Math.random()*12)*dpr,col:Math.random()<.5?'#e7a8a6':'#ecca7d'});}
+    spawn=setInterval(add,520);
+    function draw(){
+      if(!running)return;
+      x.clearRect(0,0,W,H);
+      const left=Math.max(0,dur-(Date.now()-t0));
+      for(let i=hearts.length-1;i>=0;i--){const h=hearts[i];h.y+=h.vy;
+        x.fillStyle=h.col;x.font=(h.r*2)+'px serif';x.textAlign='center';x.textBaseline='middle';
+        x.fillText('♥',h.x,h.y);
+        if(h.y>H+30*dpr)hearts.splice(i,1);}
+      const sc=document.getElementById('gscore');if(sc)sc.textContent=score+' ♥ · '+Math.ceil(left/1000)+'s';
+      if(left<=0){end();return;}
+      raf=requestAnimationFrame(draw);
+    }
+    function hit(px,py){const rx=px*dpr,ry=py*dpr;for(let i=hearts.length-1;i>=0;i--){const h=hearts[i];
+      if(Math.hypot(h.x-rx,h.y-ry)<h.r*1.6){hearts.splice(i,1);score++;break;}}}
+    function pd(e){const r=c.getBoundingClientRect();const p=e.touches?e.touches[0]:e;if(p)hit(p.clientX-r.left,p.clientY-r.top);}
+    c.addEventListener('pointerdown',pd);c.addEventListener('touchstart',pd,{passive:true});
+    function end(){running=false;clearInterval(spawn);
+      const msg=score>=18?`Incroyable, ${N} ! ${score} cœurs attrapés. Mais celui de Zaga, tu l'as gardé pour toujours.`:`${score} cœurs ! Et le plus précieux, le sien, t'appartient déjà, ${N}.`;
+      const g=document.getElementById('gres');if(g){g.innerHTML=hlN(msg)+'<br><button class="g-replay" id="grep">Rejouer</button>';g.classList.add('on');
+        const rb=document.getElementById('grep');if(rb)rb.addEventListener('click',gameCatch);}
+      speak(msg);}
+    addEventListener('resize',rs);
+    raf=requestAnimationFrame(draw);
+    gameCleanup=function(){running=false;clearInterval(spawn);if(raf)cancelAnimationFrame(raf);removeEventListener('resize',rs);};
+  }
+
+  function gameScratch(){
+    const msg=scratchMsgs[Math.random()*scratchMsgs.length|0];
+    gameInner.innerHTML='<div class="scratch-msg" id="smsg"></div><canvas class="gcanvas" id="scv"></canvas><div class="scratch-hint" id="shint">Gratte avec ton doigt ✨</div>';
+    document.getElementById('smsg').innerHTML=hlN(msg);
+    const c=document.getElementById('scv'),x=c.getContext('2d');let dpr=1,W=1,H=1,done=false;
+    function fill(){const g=x.createLinearGradient(0,0,W,H);
+      g.addColorStop(0,'#c9a24f');g.addColorStop(.5,'#f0d89a');g.addColorStop(1,'#b88b39');
+      x.globalCompositeOperation='source-over';x.fillStyle=g;x.fillRect(0,0,W,H);
+      x.fillStyle='rgba(90,60,20,.5)';x.font=(16*dpr)+'px serif';x.textAlign='center';
+      x.fillText('✦  gratte-moi  ✦',W/2,H/2);}
+    function rs(){dpr=Math.min(devicePixelRatio||1,2);const r=c.getBoundingClientRect();
+      W=c.width=Math.max(1,r.width*dpr);H=c.height=Math.max(1,r.height*dpr);fill();}
+    rs();
+    let drawing=false;
+    function scratch(px,py){x.globalCompositeOperation='destination-out';x.beginPath();x.arc(px*dpr,py*dpr,24*dpr,0,7);x.fill();}
+    function pos(e){const r=c.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return{x:p.clientX-r.left,y:p.clientY-r.top};}
+    function start(e){drawing=true;const q=pos(e);scratch(q.x,q.y);}
+    function move(e){if(!drawing)return;const q=pos(e);scratch(q.x,q.y);if(e.cancelable)e.preventDefault();}
+    function up(){if(!drawing)return;drawing=false;check();}
+    c.addEventListener('pointerdown',start);c.addEventListener('pointermove',move);
+    c.addEventListener('touchstart',start,{passive:true});c.addEventListener('touchmove',move,{passive:false});
+    addEventListener('pointerup',up);addEventListener('touchend',up);
+    function check(){if(done)return;try{const d=x.getImageData(0,0,W,H).data;let zero=0,tot=0;
+      for(let i=3;i<d.length;i+=4*40){tot++;if(d[i]===0)zero++;}
+      if(zero/tot>.55){done=true;c.style.transition='opacity .8s ease';c.style.opacity='0';
+        const h=document.getElementById('shint');if(h)h.style.display='none';speak(msg);}}catch(e){}}
+    addEventListener('resize',rs);
+    gameCleanup=function(){removeEventListener('pointerup',up);removeEventListener('touchend',up);removeEventListener('resize',rs);};
+  }
+
+  function gameQuiz(){
+    const qs=[
+      {q:`À quel point Zaga pense à toi ?`,a:['Parfois','Souvent','Tout le temps']},
+      {q:`Combien de temps veut-il rester avec toi ?`,a:['Un moment','Longtemps','Pour toujours']},
+      {q:`Que représentes-tu pour lui ?`,a:['Quelqu\'un d\'important','Très importante','Sa reine']}
+    ];
+    let i=0;
+    function render(){
+      if(i>=qs.length){result();return;}
+      const Q=qs[i];
+      gameInner.innerHTML='<div class="quiz"><p class="quiz-q"></p><div class="quiz-opts"></div></div>';
+      gameInner.querySelector('.quiz-q').textContent=Q.q;
+      const o=gameInner.querySelector('.quiz-opts');
+      Q.a.forEach(txt=>{const b=document.createElement('button');b.className='chip';b.style.opacity=1;b.style.transform='none';
+        b.textContent=txt;b.addEventListener('click',()=>{i++;render();});o.appendChild(b);});
+    }
+    function result(){
+      const m=`Peu importe tes réponses, ${N} : la vérité, c'est qu'il t'aime à l'infini, qu'il veut rester pour toujours, et que tu es, et resteras, sa reine. 💖`;
+      gameInner.innerHTML='<div class="quiz"><div class="quiz-res"></div></div>';
+      gameInner.querySelector('.quiz-res').innerHTML=hlN(m)+'<br><button class="g-replay" id="grepq">Rejouer</button>';
+      speak(m);const rb=document.getElementById('grepq');if(rb)rb.addEventListener('click',()=>{i=0;render();});
+    }
+    render();
+    gameCleanup=function(){};
+  }
+
+  gamesMenu.querySelectorAll('.g-card').forEach(card=>{
+    card.addEventListener('click',()=>selectGame(card.getAttribute('data-g')));
+  });
+  document.getElementById('gamesClose').addEventListener('click',closeGames);
+  document.getElementById('gameBack').addEventListener('click',showMenu);
+  document.getElementById('gamesBtn').addEventListener('click',openGames);
+
   document.getElementById('enterBtn').addEventListener('click',startWelcome);
 
   function send(){
@@ -763,7 +982,7 @@
     const m=pickSky();
     type(m); speak(m);
   }
-  const SKIP='button,input,.dock,#welcome,#enter,.mute,.video,#cinema';
+  const SKIP='button,input,.dock,#welcome,#enter,.mute,.video,.games,#cinema,#games';
   addEventListener('touchstart',e=>{
     if(e.target.closest(SKIP))return;
     lastTouch=Date.now();
