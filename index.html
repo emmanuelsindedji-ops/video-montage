@@ -181,8 +181,8 @@
   .g-stage{flex:1 1 auto;position:relative;display:none;z-index:2;min-height:0}
   .g-stage.on{display:block}
   .gcanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-  .g-back{position:absolute;top:1rem;left:1rem;z-index:6;background:rgba(0,0,0,.35);
-    border:1px solid rgba(236,202,125,.4);color:var(--gold);border-radius:999px;
+  .g-back{position:absolute;top:1rem;left:1rem;z-index:9;background:rgba(0,0,0,.45);
+    border:1px solid rgba(236,202,125,.5);color:var(--gold);border-radius:999px;
     padding:.5em 1.1em;cursor:pointer;font-family:'Cormorant Garamond';font-size:1rem}
   .g-score{position:absolute;top:1rem;left:50%;transform:translateX(-50%);z-index:5;color:var(--gold);
     font-family:'Cormorant Garamond';font-size:1.15rem;letter-spacing:.04em;
@@ -263,7 +263,7 @@
 
 <!-- JEUX d'amour -->
 <div id="games">
-  <div class="cine-head"><span>Jeux d'amour</span><button class="cine-x" id="gamesClose" aria-label="Fermer">✕</button></div>
+  <div class="cine-head"><button class="cine-x" id="gamesHome" aria-label="Accueil" title="Accueil">⌂</button><span>Jeux d'amour</span><button class="cine-x" id="gamesClose" aria-label="Fermer">✕</button></div>
   <div class="g-menu" id="gamesMenu">
     <div class="g-card" data-g="catch"><div class="t">💖 Attrape les cœurs</div><div class="d">Attrape un maximum de cœurs en 30 secondes</div></div>
     <div class="g-card" data-g="scratch"><div class="t">✨ Carte à gratter</div><div class="d">Gratte avec ton doigt pour révéler un message caché</div></div>
@@ -882,8 +882,9 @@
     c.addEventListener('pointerdown',pd);c.addEventListener('touchstart',pd,{passive:true});
     function end(){running=false;clearInterval(spawn);
       const msg=score>=18?`Incroyable, ${N} ! ${score} cœurs attrapés. Mais celui de Zaga, tu l'as gardé pour toujours.`:`${score} cœurs ! Et le plus précieux, le sien, t'appartient déjà, ${N}.`;
-      const g=document.getElementById('gres');if(g){g.innerHTML=hlN(msg)+'<br><button class="g-replay" id="grep">Rejouer</button>';g.classList.add('on');
-        const rb=document.getElementById('grep');if(rb)rb.addEventListener('click',gameCatch);}
+      const g=document.getElementById('gres');if(g){g.innerHTML=hlN(msg)+'<br><button class="g-replay" id="grep">Rejouer</button> <button class="g-replay" id="gmenu">⟵ Jeux</button>';g.classList.add('on');
+        const rb=document.getElementById('grep');if(rb)rb.addEventListener('click',gameCatch);
+        const mb=document.getElementById('gmenu');if(mb)mb.addEventListener('click',showMenu);}
       speak(msg);}
     addEventListener('resize',rs);
     raf=requestAnimationFrame(draw);
@@ -939,17 +940,28 @@
     function result(){
       const m=`Peu importe tes réponses, ${N} : la vérité, c'est qu'il t'aime à l'infini, qu'il veut rester pour toujours, et que tu es, et resteras, sa reine. 💖`;
       gameInner.innerHTML='<div class="quiz"><div class="quiz-res"></div></div>';
-      gameInner.querySelector('.quiz-res').innerHTML=hlN(m)+'<br><button class="g-replay" id="grepq">Rejouer</button>';
+      gameInner.querySelector('.quiz-res').innerHTML=hlN(m)+'<br><button class="g-replay" id="grepq">Rejouer</button> <button class="g-replay" id="gmenuq">⟵ Jeux</button>';
       speak(m);const rb=document.getElementById('grepq');if(rb)rb.addEventListener('click',()=>{i=0;render();});
+      const mb=document.getElementById('gmenuq');if(mb)mb.addEventListener('click',showMenu);
     }
     render();
     gameCleanup=function(){};
   }
 
+  function gamesHome(){
+    closeGames();
+    setTimeout(()=>{
+      world.classList.remove('show');
+      welcomeEl.style.display='';
+      wprompt.classList.remove('in');
+      startWelcome();
+    },650);
+  }
   gamesMenu.querySelectorAll('.g-card').forEach(card=>{
     card.addEventListener('click',()=>selectGame(card.getAttribute('data-g')));
   });
   document.getElementById('gamesClose').addEventListener('click',closeGames);
+  document.getElementById('gamesHome').addEventListener('click',gamesHome);
   document.getElementById('gameBack').addEventListener('click',showMenu);
   document.getElementById('gamesBtn').addEventListener('click',openGames);
 
