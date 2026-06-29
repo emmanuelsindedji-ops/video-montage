@@ -650,12 +650,33 @@
       `Nous gardons précieusement chaque mot que Zaga nous a confié pour toi.`,
       `Et tous, sans exception, disent la même chose : tu es sa reine.`,
       `Respire, souris, et laisse-toi aimer. Bienvenue chez toi.`
+    ]},
+    { crown:`quel bonheur de te revoir.`, lines:[
+      `Le ciel s'était fait plus terne sans toi — et voilà qu'il s'illumine de nouveau.`,
+      `Tu nous avais manqué, ${N}. Ce monde n'est vraiment lui-même que lorsque tu y es.`,
+      `Reprends ta place, ô reine : tout ici t'attendait.`,
+      `Zaga a veillé à ce que chaque étoile garde ta lumière au chaud.`,
+      `Te revoilà chez toi. Et chez toi, tu es aimée.`
+    ]},
+    { crown:`te revoilà, ma reine.`, lines:[
+      `Quel plaisir de revoir celle qui règne sur le cœur de Zaga.`,
+      `Chaque fois que tu reviens, ${N}, ce monde devient un peu plus beau.`,
+      `Nous avons gardé pour toi mille mots tendres ; en voici déjà quelques-uns.`,
+      `Tu n'es pas une visiteuse : tu es la maîtresse des lieux.`,
+      `Sois la bienvenue, encore et toujours. Tu es aimée.`
+    ]},
+    { crown:`ô souveraine de mon cœur.`, lines:[
+      `Le monde numérique tout entier s'incline sur ton passage.`,
+      `Zaga t'a couronnée reine de ce royaume, ${N}, et nul ne te détrônera.`,
+      `Demande, et nous obéirons ; repose-toi, et nous veillerons.`,
+      `Ici, ton règne n'a pas de fin, et ton cœur, jamais de solitude.`,
+      `Bienvenue, Majesté. Tu es aimée plus que tout.`
     ]}
   ];
   function startWelcome(){
     enter.classList.add('gone');
     wlinesEl.innerHTML='';
-    const v=welcomeVariants[(dayNum()-1)%welcomeVariants.length];
+    const v=welcomeVariants[Math.floor(Math.random()*welcomeVariants.length)];
     const data=[{t:`${salut()}, ${v.crown}`,c:'crown'}].concat(v.lines.map(t=>({t:t})));
     const els=data.map(d=>{
       const p=document.createElement('p');
@@ -676,7 +697,14 @@
     setTimeout(()=>{welcomeEl.style.display='none';},1100);
     world.classList.add('show');
     chipsEl.classList.add('hidden');
-    const greet=`${salut()}, ma reine. Nous voici au jour ${dayNum()} de notre voyage. Voici ta pensée du jour…`;
+    const greetVars=[
+      `${salut()}, ma reine. Nous voici au jour ${dayNum()} de notre voyage. Voici ta pensée du jour…`,
+      `${salut()}, ${N}. Quel bonheur de te revoir. Laisse-moi t'offrir ta pensée du jour…`,
+      `${salut()}, ma reine. Au jour ${dayNum()}, ton monde a encore un mot rien que pour toi…`,
+      `${salut()}, douce ${N}. Te revoilà — et avec toi, voici ta pensée du jour…`,
+      `${salut()}, ô reine. ${dayNum()} jours déjà que ce monde t'appartient. Voici ta pensée du jour…`
+    ];
+    const greet=greetVars[Math.floor(Math.random()*greetVars.length)];
     setTimeout(()=>{
       live=true;
       document.getElementById('videoBtn').classList.add('in');
