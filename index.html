@@ -151,10 +151,26 @@
     font-size:clamp(1rem,4.2vw,1.18rem);letter-spacing:.07em;cursor:pointer;transition:background .3s}
   .cine-nav button:hover,.cine-nav button:focus-visible{background:rgba(236,202,125,.2);outline:none}
 
+  #cineSky{position:absolute;inset:0;z-index:0;pointer-events:none}
+  #walkers{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);
+    width:min(72vw,330px);height:auto;z-index:1;pointer-events:none;
+    filter:drop-shadow(0 0 12px rgba(236,202,125,.35))}
+  .couple{animation:bob 3.6s ease-in-out infinite;transform-origin:center bottom}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  #walkers .fig{fill:#0e0b1c;stroke:rgba(236,202,125,.5);stroke-width:1.4}
+  #walkers .arm{fill:none;stroke:rgba(236,202,125,.55);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  #walkers .lilheart{fill:var(--rose);opacity:.92;transform-box:fill-box;transform-origin:center;
+    animation:beatlil 2.2s ease-in-out infinite}
+  @keyframes beatlil{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+  .cine-stage{z-index:1}
+  .video{right:calc(max(4vw,1rem) + 52px) !important;display:none}
+  .video.in{display:flex}
+
   @media (prefers-reduced-motion: reduce){
     .heartbtn{animation:none}.orb.think{animation:none}.caret{animation:none}
     .pulse{animation:none}
     .wline{transition:opacity .5s ease}
+    .couple{animation:none}.lilheart{animation:none}
   }
 </style>
 </head>
@@ -176,13 +192,28 @@
 </div>
 
 <button class="mute" id="mute" aria-label="Couper le son" title="Son">🔊</button>
+<button class="mute video" id="videoBtn" aria-label="Notre voyage" title="Notre voyage">🎬</button>
 
-<!-- CINEMA d'amour -->
+<!-- CINEMA : Notre voyage -->
 <div id="cinema">
-  <div class="cine-head"><span>Cinéma d'amour</span><button class="cine-x" id="cineClose" aria-label="Fermer">✕</button></div>
+  <canvas id="cineSky"></canvas>
+  <svg id="walkers" viewBox="0 0 300 200" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <g class="couple">
+      <path class="lilheart" d="M150 34 c-4 -8 -16 -6 -16 3 c0 7 10 12 16 18 c6 -6 16 -11 16 -18 c0 -9 -12 -11 -16 -3 z"/>
+      <circle class="fig" cx="122" cy="64" r="14"/>
+      <path class="fig" d="M122 78 C103 84 99 150 103 176 L141 176 C145 150 141 84 122 78 Z"/>
+      <circle class="fig" cx="180" cy="66" r="12"/>
+      <path class="fig" d="M180 78 C168 84 162 150 156 180 L204 180 C198 150 192 84 180 78 Z"/>
+      <path class="arm" d="M138 120 L151 130 L164 118"/>
+    </g>
+  </svg>
   <div class="cine-stage" id="cineStage"></div>
+  <div class="cine-head"><span>Notre voyage</span><button class="cine-x" id="cineClose" aria-label="Fermer">✕</button></div>
   <div class="cine-cap"><p id="cineCap"></p></div>
-  <div class="cine-nav"><button id="cineNext">Une autre ✦</button></div>
+  <div class="cine-nav">
+    <button id="cineHome">⟵ Accueil</button>
+    <button id="cineNext">Une autre ✦</button>
+  </div>
 </div>
 
 <!-- WORLD -->
@@ -525,6 +556,7 @@
     const greet=`${salut()}, ma reine. Je suis l'une des intelligences que Zaga a créées, et je connais son cœur par cœur. Touche une étoile… ou parle-moi.`;
     setTimeout(()=>{
       type(greet); speak(greet); live=true;
+      document.getElementById('videoBtn').classList.add('in');
       chipsEl.classList.remove('hidden');
       [...chipsEl.children].forEach((ch,i)=>setTimeout(()=>ch.classList.add('in'),110*i));
     },750);
@@ -574,20 +606,66 @@
       if(speakIt)speak(m);
     },480);
   }
+  // animated night sky for "Notre voyage"
+  let cs=null,csx=null,cw=0,ch=0,cdpr=1,cstars=[],cpath=[],cineOpen=false,cineRAF=null;
+  function cineResize(){
+    cdpr=Math.min(devicePixelRatio||1,2);
+    cw=cs.width=innerWidth*cdpr;ch=cs.height=innerHeight*cdpr;
+    cs.style.width=innerWidth+'px';cs.style.height=innerHeight+'px';
+    cstars=[];
+    [[cw*ch/9000,.15,.6],[cw*ch/16000,.35,1],[cw*ch/30000,.7,1.5]].forEach(([n,sp,r])=>{
+      for(let i=0;i<n;i++)cstars.push({x:Math.random()*cw,y:Math.random()*ch*.72,
+        r:r*cdpr*(.6+Math.random()*.8),sp:sp*cdpr,tw:Math.random()*7});});
+    cpath=[];const base=ch*.80;
+    for(let i=0;i<70;i++)cpath.push({x:Math.random()*cw,y:base+(Math.random()*46-23)*cdpr,
+      r:(1+Math.random()*2)*cdpr,sp:(.8+Math.random()*.5)*cdpr,tw:Math.random()*7});
+  }
+  function cineDraw(){
+    csx.clearRect(0,0,cw,ch);
+    const mx=cw*.82,my=ch*.16,mr=44*cdpr;
+    csx.globalAlpha=1;csx.fillStyle='rgba(245,240,225,.92)';
+    csx.beginPath();csx.arc(mx,my,mr,0,7);csx.fill();
+    csx.globalCompositeOperation='destination-out';
+    csx.beginPath();csx.arc(mx+mr*.55,my-mr*.28,mr*.92,0,7);csx.fill();
+    csx.globalCompositeOperation='source-over';
+    for(const s of cstars){s.x-=s.sp;if(s.x<0)s.x=cw;s.tw+=.03;
+      csx.globalAlpha=Math.max(.1,.4+Math.sin(s.tw)*.3);csx.fillStyle='#f5f2ea';
+      csx.beginPath();csx.arc(s.x,s.y,s.r,0,7);csx.fill();}
+    for(const p of cpath){p.x-=p.sp;if(p.x<0)p.x=cw;p.tw+=.05;
+      csx.globalAlpha=Math.max(.1,.5+Math.sin(p.tw)*.4);csx.fillStyle='#ecca7d';
+      csx.beginPath();csx.arc(p.x,p.y,p.r,0,7);csx.fill();}
+    csx.globalAlpha=1;
+  }
+  function cineLoop(){if(!cineOpen)return;cineDraw();cineRAF=requestAnimationFrame(cineLoop);}
   function openCinema(){
     cinema.classList.add('show');
+    if(!cs){cs=document.getElementById('cineSky');csx=cs.getContext('2d');
+      addEventListener('resize',()=>{if(cineOpen)cineResize();});}
+    cineResize();cineOpen=true;cineLoop();
     showCineCap(false);
     cineRain=setInterval(spawnHeart,reduce?900:360);
     cineRot=setInterval(()=>showCineCap(false),7000);
   }
   function closeCinema(){
-    cinema.classList.remove('show');
+    cinema.classList.remove('show');cineOpen=false;
     clearInterval(cineRain);clearInterval(cineRot);cineRain=cineRot=null;
+    if(cineRAF){cancelAnimationFrame(cineRAF);cineRAF=null;}
     setTimeout(()=>{cineStage.innerHTML='';},700);
     if(synth){try{synth.cancel();}catch(e){}}
   }
+  function cineHome(){
+    closeCinema();
+    setTimeout(()=>{
+      world.classList.remove('show');
+      welcomeEl.style.display='';
+      wprompt.classList.remove('in');
+      startWelcome();
+    },720);
+  }
   document.getElementById('cineClose').addEventListener('click',closeCinema);
   document.getElementById('cineNext').addEventListener('click',()=>showCineCap(true));
+  document.getElementById('cineHome').addEventListener('click',cineHome);
+  document.getElementById('videoBtn').addEventListener('click',openCinema);
 
   document.getElementById('enterBtn').addEventListener('click',startWelcome);
 
@@ -618,7 +696,7 @@
     const m=pickSky();
     type(m); speak(m);
   }
-  const SKIP='button,input,.dock,#welcome,#enter,.mute';
+  const SKIP='button,input,.dock,#welcome,#enter,.mute,.video,#cinema';
   addEventListener('touchstart',e=>{
     if(e.target.closest(SKIP))return;
     lastTouch=Date.now();
