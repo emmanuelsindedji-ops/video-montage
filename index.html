@@ -60,17 +60,19 @@
   .speech{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
     padding:1.3rem 8vw 1rem;display:block}
   .reply{font-family:'Cormorant Garamond';font-weight:500;text-align:center;
-    font-size:clamp(1.2rem,5.6vw,1.85rem);line-height:1.5;max-width:30rem;margin:0 auto;color:var(--star)}
+    font-size:clamp(1.25rem,5.8vw,1.9rem);line-height:1.5;max-width:30rem;margin:0 auto;color:var(--star);
+    text-shadow:0 1px 16px rgba(0,0,0,.6)}
   .reply .hl{color:var(--gold);font-style:italic}
   .caret{display:inline-block;width:.6ch;color:var(--gold);animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
 
-  .dock{flex:0 0 auto;padding:.6rem 4vw max(4vh,1.2rem);position:relative;z-index:2;
-    background:linear-gradient(to top, rgba(5,6,26,.92), rgba(5,6,26,.55) 55%, transparent)}
-  .chips{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;max-width:34rem;margin:0 auto 1rem}
+  .dock{flex:0 0 auto;padding:.5rem 4vw max(2.6vh,.9rem);position:relative;z-index:2;
+    background:linear-gradient(to top, rgba(5,6,26,.94), rgba(5,6,26,.6) 55%, transparent)}
+  .chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;max-width:34rem;
+    margin:0 auto .7rem;max-height:29vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:2px}
   .chip{background:rgba(205,214,255,.05);border:1px solid rgba(236,202,125,.28);
-    color:var(--ink);border-radius:999px;padding:.5em 1.05em;font-family:'Cormorant Garamond';
-    font-size:clamp(.95rem,3.9vw,1.1rem);cursor:pointer;transition:all .3s;letter-spacing:.01em}
+    color:var(--ink);border-radius:999px;padding:.4em .85em;font-family:'Cormorant Garamond';
+    font-size:clamp(.86rem,3.5vw,1rem);cursor:pointer;transition:all .3s;letter-spacing:.01em}
   .chip:hover,.chip:focus-visible{background:rgba(236,202,125,.14);border-color:var(--gold);
     color:#fff;outline:none;transform:translateY(-1px)}
   .ask{display:flex;gap:.5rem;max-width:30rem;margin:0 auto;align-items:center}
@@ -307,7 +309,7 @@
   ];
   let THEME=themes[0];
   function applyTheme(){
-    const t=themes[(dayNum()-1)%themes.length];THEME=t;
+    const t=themes[Math.floor(Math.random()*themes.length)];THEME=t;
     const r=document.documentElement.style;
     r.setProperty('--sky-top',t.top);r.setProperty('--sky-mid',t.mid);r.setProperty('--sky-horizon',t.hor);
     r.setProperty('--gold',t.gold);r.setProperty('--rose',t.rose);
@@ -585,27 +587,24 @@
 
   /* ----- voice (calm male, romantic) ----- */
   const synth=window.speechSynthesis;
-  let muted=false, frVoices=[];
-  const voiceProfiles=[{rate:.84,pitch:.82},{rate:.80,pitch:.90},{rate:.88,pitch:.78},{rate:.82,pitch:.88}];
+  let muted=false, frVoices=[], sessionVoice=null;
+  const voiceProfiles=[{rate:.84,pitch:.82},{rate:.80,pitch:.92},{rate:.90,pitch:.76},{rate:.82,pitch:1.0},{rate:.86,pitch:.70}];
+  const sessionProfile=voiceProfiles[Math.floor(Math.random()*voiceProfiles.length)];
   function chooseVoice(){
     if(!synth)return;
     const vs=synth.getVoices();
     frVoices=vs.filter(v=>/fr/i.test(v.lang));
-    frVoices.sort((a,b)=>{
-      const m=v=>/(thomas|paul|nicolas|henri|guillaume|male|homme)/i.test(v.name)?0:1;
-      return m(a)-m(b);
-    });
+    if(!sessionVoice && frVoices.length) sessionVoice=frVoices[Math.floor(Math.random()*frVoices.length)];
   }
   if(synth){ chooseVoice(); synth.onvoiceschanged=chooseVoice; }
-  function dailyVoice(){ if(!frVoices.length)return null; return frVoices[(dayNum()-1)%frVoices.length]; }
   function speak(text,queue){
     if(!synth||muted)return;
     try{ if(!queue)synth.cancel(); }catch(e){}
     const u=new SpeechSynthesisUtterance(String(text).replace(/\n+/g,'. '));
     u.lang='fr-FR';
-    const p=voiceProfiles[(dayNum()-1)%voiceProfiles.length];
-    u.rate=p.rate; u.pitch=p.pitch;
-    const v=dailyVoice(); if(v)u.voice=v;
+    u.rate=sessionProfile.rate;
+    u.pitch=Math.max(.5,Math.min(1.4, sessionProfile.pitch + (Math.random()*.12-.06)));
+    if(sessionVoice)u.voice=sessionVoice;
     synth.speak(u);
   }
   const muteBtn=document.getElementById('mute');
