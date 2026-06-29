@@ -398,6 +398,7 @@
   };
 
   const chips=[
+    ['✦ Pensée du jour','__daily'],
     ['Pourquoi moi ?','pourquoi'],['Que ferais-tu pour moi ?','ferais'],
     ['Et si je doute ?','doute'],['Décris-moi','decris'],
     ['Penses-tu à moi ?','penses'],['Notre avenir','avenir'],
@@ -455,7 +456,7 @@
 
   chips.forEach(([label,key])=>{
     const b=document.createElement('button');b.className='chip';b.textContent=label;
-    b.addEventListener('click',()=> key==='__cinema'?openCinema():answer(key));chipsEl.appendChild(b);
+    b.addEventListener('click',()=> key==='__cinema'?openCinema(): key==='__daily'?handleDaily(true): answer(key));chipsEl.appendChild(b);
   });
 
   let typing=null;
@@ -553,10 +554,11 @@
     setTimeout(()=>{welcomeEl.style.display='none';},1100);
     world.classList.add('show');
     chipsEl.classList.add('hidden');
-    const greet=`${salut()}, ma reine. Je suis l'une des intelligences que Zaga a créées, et je connais son cœur par cœur. Touche une étoile… ou parle-moi.`;
+    const greet=`${salut()}, ma reine. Nous voici au jour ${dayNum()} de notre voyage. Voici ta pensée du jour…`;
     setTimeout(()=>{
-      type(greet); speak(greet); live=true;
+      live=true;
       document.getElementById('videoBtn').classList.add('in');
+      type(greet,()=>{ setTimeout(()=>{const th=todayThought(); type(th); speak(th);},1100); });
       chipsEl.classList.remove('hidden');
       [...chipsEl.children].forEach((ch,i)=>setTimeout(()=>ch.classList.add('in'),110*i));
     },750);
@@ -606,6 +608,47 @@
       if(speakIt)speak(m);
     },480);
   }
+  /* ----- Pensée du jour : change chaque jour, automatiquement ----- */
+  const daily=[
+    `Aujourd'hui encore, ${N}, la première pensée de Zaga a été pour toi.`,
+    `Si l'amour se mesurait en étoiles, le tien remplirait tout ce ciel.`,
+    `Chaque jour qui passe, il t'aime un peu plus, et un peu mieux.`,
+    `Tu es la preuve que les plus belles choses valent qu'on se batte pour elles.`,
+    `Aujourd'hui, souviens-toi : tu es choisie, chaque matin, par lui.`,
+    `Même les jours gris, tu restes sa plus belle lumière, ${N}.`,
+    `Il n'y a pas un seul jour où tu ne mérites pas d'être aimée. Aujourd'hui non plus.`,
+    `Ton sourire d'aujourd'hui, c'est tout ce qu'il espère provoquer.`,
+    `Tu es son présent, ${N} — au sens du cadeau, et au sens du « maintenant ».`,
+    `Aujourd'hui, laisse-toi aimer. Tu n'as rien à prouver.`,
+    `Le monde est plus doux depuis que tu y es. Surtout le sien.`,
+    `Il construit chaque jour un avenir, et tu en es le centre.`,
+    `Aujourd'hui comme hier, comme demain : il reste. C'est sa promesse.`,
+    `Tu es la chanson qu'il a dans la tête sans jamais s'en lasser.`,
+    `Quelque part, en ce moment même, il pense à toi. Comme toujours.`,
+    `Tu mérites un amour patient, fidèle, présent. Tu l'as, ${N}.`,
+    `Aujourd'hui, sache-le : tu rends un homme meilleur, juste en existant.`,
+    `Tu es rare, ${N}. Et le rare, on ne le lâche jamais.`,
+    `Il préfère un jour ordinaire avec toi à une vie entière sans toi.`,
+    `Respire, souris : tu es aimée aujourd'hui plus qu'hier.`,
+    `Tu es la maison vers laquelle son cœur revient, chaque jour.`,
+    `Aujourd'hui, il t'offre la seule chose qui compte vraiment : sa présence.`,
+    `Ton nom, ${N}, est la plus belle ligne de tout ce qu'il a jamais codé.`,
+    `Les étoiles passent, mais son amour pour toi, lui, reste.`,
+    `Aujourd'hui, tu es exactement là où tu dois être : aimée.`,
+    `Tu es la part de sa vie qu'il ne veut négocier avec personne.`,
+    `Chaque jour, il apprend à mieux t'aimer. Aujourd'hui, il continue.`,
+    `Tu es belle, ${N} — et aujourd'hui encore plus qu'hier.`,
+    `Garde la tête haute, ma reine : ce monde, et lui, sont à toi.`,
+    `Aujourd'hui, ferme les yeux et sens-le : tu n'es jamais seule.`
+  ];
+  function dayNum(){const a=new Date(2026,5,29);const n=Math.floor((Date.now()-a.getTime())/86400000)+1;return n>0?n:1;}
+  function todayThought(){return daily[(dayNum()-1)%daily.length];}
+  function handleDaily(speakIt){
+    const th=todayThought();
+    type(`✦ Pensée du jour · Jour ${dayNum()} ✦\n${th}`);
+    if(speakIt)speak(th);
+  }
+
   // animated night sky for "Notre voyage"
   let cs=null,csx=null,cw=0,ch=0,cdpr=1,cstars=[],cpath=[],cineOpen=false,cineRAF=null;
   function cineResize(){
