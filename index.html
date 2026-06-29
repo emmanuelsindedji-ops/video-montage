@@ -593,14 +593,10 @@
 
   /* ----- voice (calm male, romantic) ----- */
   const synth=window.speechSynthesis;
-  let muted=false, frVoices=[], sessionVoice=null;
-  const voiceProfiles=[{rate:.84,pitch:.82},{rate:.80,pitch:.92},{rate:.90,pitch:.76},{rate:.82,pitch:1.0},{rate:.86,pitch:.70}];
-  const sessionProfile=voiceProfiles[Math.floor(Math.random()*voiceProfiles.length)];
+  let muted=false, frVoices=[];
   function chooseVoice(){
     if(!synth)return;
-    const vs=synth.getVoices();
-    frVoices=vs.filter(v=>/fr/i.test(v.lang));
-    if(!sessionVoice && frVoices.length) sessionVoice=frVoices[Math.floor(Math.random()*frVoices.length)];
+    frVoices=synth.getVoices().filter(v=>/fr/i.test(v.lang));
   }
   if(synth){ chooseVoice(); synth.onvoiceschanged=chooseVoice; }
   function speak(text,queue){
@@ -608,9 +604,10 @@
     try{ if(!queue)synth.cancel(); }catch(e){}
     const u=new SpeechSynthesisUtterance(String(text).replace(/\n+/g,'. '));
     u.lang='fr-FR';
-    u.rate=sessionProfile.rate;
-    u.pitch=Math.max(.5,Math.min(1.4, sessionProfile.pitch + (Math.random()*.12-.06)));
-    if(sessionVoice)u.voice=sessionVoice;
+    // forte variation à chaque message -> effet "mille intelligences"
+    u.rate=0.80+Math.random()*0.16;     // 0.80–0.96
+    u.pitch=0.62+Math.random()*0.66;    // 0.62–1.28
+    if(frVoices.length)u.voice=frVoices[Math.floor(Math.random()*frVoices.length)];
     synth.speak(u);
   }
   const muteBtn=document.getElementById('mute');
